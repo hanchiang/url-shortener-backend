@@ -4,5 +4,33 @@ services:
   node-app:
     environment:
       - NODE_ENV=development
+      - MYSQL_HOST=mysql
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+      - MYSQL_DB=url-shortener
+      - REDIS_CACHE_URL=redis://redis_cache:6379/0
+      - REDIS_KEYS_URL=redis://redis_keys:6378/0
     ports:
-      - 3000:3000
+      - "3000:3000"
+    depends_on:
+      - mysql
+      - redis_cache
+      - redis_keys
+
+  mysql:
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=url-shortener
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+    ports:
+      - "3306:3306"
+
+  redis_cache:
+    ports:
+      - "6379:6379"
+
+  redis_keys:
+    ports:
+      - "6378:6379"
+    command: --port 6378

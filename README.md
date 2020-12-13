@@ -82,10 +82,10 @@ Max usage: 10% * 2.4B URLs * (16 bytes hash + 1024 bytes original url) = 249.6GB
 # Architecture
 
 ## Write request
-![](images/url-shortener-write.png)
+<img src="images/url-shortener-write.png" width="700" />
 
 ## Read request
-![](images/url-shortener-read.png)
+<img src="images/url-shortener-read.png" width="700" />
 
 
 ## Storage
@@ -104,6 +104,7 @@ Memory usage: 100M * 6 ~ 600MB
 
 # Ideas
 * Horizontal scaling: application, database and cache servers
+* Performance: Retrieve keys from redis and store in memory
 * Analytics: Track the usage of URLs
   * How many redirects per day
   * Remove URL after certain period of inactivity(no redirection request)

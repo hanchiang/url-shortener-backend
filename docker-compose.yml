@@ -14,3 +14,24 @@ services:
       - ./package.json:/opt/node_app/package.json
       - ./package-lock.json:/opt/node_app/package-lock.json
       - /opt/node_app/node_modules
+
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - mysql-volume:/var/lib/mysql    
+  
+  redis_cache:
+    image: redis:6.0
+    volumes:
+      - redis_cache-volume:/data
+
+  redis_keys:
+    image: redis:6.0
+    volumes:
+      - redis_keys-volume:/data
+
+
+volumes:
+  redis_cache-volume:
+  redis_keys-volume:
+  mysql-volume:
