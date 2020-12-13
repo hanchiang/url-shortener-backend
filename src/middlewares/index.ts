@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import config from '../config';
-import { throwError } from '../util/error';
+import { throwError } from '../utils/error';
 import { CustomError } from '../types/error';
 
 export const notFound = (req: Request, res: Response, next: NextFunction) => {
