@@ -4,14 +4,13 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "target": "es6",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "noImplicitAny": false, // Might be overly stringent if this is set to true. Exercise judgement here
     "moduleResolution": "node",
     "sourceMap": true,
-    "outDir": "dist",
-    "baseUrl": ".",
-    "paths": {
-      "*": ["node_modules/*", "src/types/*"]
-    }
+    "outDir": "./dist",
+    "baseUrl": "./src"
   },
   "include": ["src/**/*"]
 }
