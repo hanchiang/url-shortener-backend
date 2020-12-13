@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+  node-app:
+    container_name: node-app
+    build:
+      context: .
+      target: dependencies
+      dockerfile: Dockerfile
+    image: node-app:dev
+    command: npm run debug
+    volumes:
+      - ./:/opt/node_app
+      - ./package.json:/opt/node_app/package.json
+      - ./package-lock.json:/opt/node_app/package-lock.json
+      - /opt/node_app/node_modules
