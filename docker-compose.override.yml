@@ -1,7 +1,7 @@
 version: '3.4'
 
 services:
-  node-app:
+  backend:
     environment:
       - NODE_ENV=development
       - MYSQL_HOST=mysql

@@ -34,6 +34,6 @@ ENV NODE_ENV production
 ENV PORT 3000
 ENV PATH /opt/node_app/node_modules/.bin:$PATH
 
-COPY --from=dependencies ./opt/node_app/dist ./dist
+COPY --from=dependencies /opt/node_app/dist ./dist
 RUN npm ci --only=production
 CMD [ "npm", "run", "start" ]
