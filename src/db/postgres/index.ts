@@ -1,41 +1,41 @@
 import {
   createConnection,
-  getConnection as getMysqlConnection,
+  getConnection as getDbConnection,
   Connection,
 } from 'typeorm';
 import config from '../../config';
 
-export class MySql {
-  private static instance: MySql;
+export class Postgres {
+  private static instance: Postgres;
   private connection: Connection;
 
   private constructor(connection: Connection) {
     this.connection = connection;
   }
 
-  public static async getInstance(): Promise<MySql> {
+  public static async getInstance(): Promise<Postgres> {
     if (!this.instance) {
       const conn = await this.connect();
       this.instance = new this(conn);
     }
-    return MySql.instance;
+    return this.instance;
   }
 
   private static async connect(): Promise<Connection> {
     return createConnection({
-      type: 'mysql',
-      host: config.mysqlHost,
-      port: config.mysqlPort,
-      username: config.mysqlUser,
-      password: config.mysqlPassword,
-      database: config.mysqlDb,
+      type: 'postgres',
+      host: config.postgresHost,
+      port: config.postgresPort,
+      username: config.postgresUser,
+      password: config.postgresPassword,
+      database: config.postgresDb,
       entities: [__dirname + '/entity/*.ts'],
       synchronize: true,
     });
   }
 
-  public static async getConnection(name?: string): Promise<Connection> {
-    return getMysqlConnection(name);
+  public static async getConnection(): Promise<Connection> {
+    return getDbConnection();
   }
 
   public static async close(): Promise<void> {

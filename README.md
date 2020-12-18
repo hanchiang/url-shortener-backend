@@ -89,22 +89,17 @@ Max usage: 10% * 2.4B URLs * (16 bytes hash + 1024 bytes original url) = 249.6GB
 
 
 ## Storage
-MySQL: Shortened URLs and original URLs
-Redis: 1 instance for storing available URL keys, 1 instance for caching shortened URLs and original URLs
+PostgreSQL: Shortened URLs and original URLs
+Redis: Cache shortened URLs and original URLs
 
 ## Key generation
-A singleton service that generates and stores 1 month's worth of keys(100M) in a memory database(e.g. redis). Similar to a [token bucket](https://en.wikipedia.org/wiki/Token_bucket), but without the rate limit.  
+Generates a certain number of random keys.  
 Each key contains 6 characters.  
-
-The application server can retrieve some keys and store them in memory for performance optimisation.  
-
-This service will periodically regenerate keys
-
-Memory usage: 100M * 6 ~ 600MB
 
 # Ideas
 * Horizontal scaling: application, database and cache servers
 * Performance: Retrieve keys from redis and store in memory
+* Generate keys up front and periodically instead of on demand
 * Analytics: Track the usage of URLs
   * How many redirects per day
   * Remove URL after certain period of inactivity(no redirection request)

@@ -3,13 +3,12 @@ dotenv.config();
 
 const config = {
   nodeEnv: process.env.NODE_ENV || 'development',
-  mysqlHost: process.env.MYSQL_HOST,
-  mysqlDb: process.env.MYSQL_DB,
-  mysqlUser: process.env.MYSQL_USER,
-  mysqlPassword: process.env.MYSQL_PASSWORD,
-  mysqlPort: parseInt(process.env.MYSQL_PORT) || 3306,
-  redisCacheUrl: process.env['REDIS_CACHE_URL'],
-  redisKeysUrl: process.env['REDIS_KEYS_URL'],
+  postgresHost: process.env.POSTGRES_HOST || 'localhost',
+  postgresDb: process.env.POSTGRES_DB || 'url-shortener',
+  postgresUser: process.env.POSTGRES_USER || 'root',
+  postgresPassword: process.env.POSTGRES_PASSWORD || 'root',
+  postgresPort: parseInt(process.env.POSTGRES_PORT) || 5432,
+  redisUrl: process.env['REDIS_URL'] || 'redis://localhost:6379/0',
 };
 
 export default config;

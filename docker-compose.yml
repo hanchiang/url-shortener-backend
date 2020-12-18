@@ -14,23 +14,16 @@ services:
       - ./package-lock.json:/opt/node_app/package-lock.json
       - /opt/node_app/node_modules
 
-  mysql:
-    image: mysql:5.7
+  postgres:
+    image: postgres:13.1
     volumes:
-      - mysql-volume:/var/lib/mysql    
+      - postgres-volume:/var/lib/postgresql/data
   
-  redis_cache:
+  redis:
     image: redis:6.0
     volumes:
-      - redis_cache-volume:/data
-
-  redis_keys:
-    image: redis:6.0
-    volumes:
-      - redis_keys-volume:/data
-
+      - redis-volume:/data
 
 volumes:
-  redis_cache-volume:
-  redis_keys-volume:
-  mysql-volume:
+  redis-volume:
+  postgres-volume:
