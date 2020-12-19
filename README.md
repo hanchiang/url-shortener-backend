@@ -72,8 +72,8 @@ Max size of an URL entry in DB: 16 + 1024 + 8 + 8 = 1048 bytes
 Storage: 2.4B * 1048 bytes per URL = 2.5152TB
 
 **Encoding of URL**
-Generate a cryptographically strong pseudo random data, encode it with base62.
-A 6 character key will result in 62^2 = 56.8B possible strings
+Generate a cryptographically strong pseudo random data, encode it with base64.
+A 6 character key will result in 64^6 = 68.7B possible strings
 
 **Memory**
 Let's assume 10% of the URLs are accessed frequently and will be cached.  
