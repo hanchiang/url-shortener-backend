@@ -1,6 +1,8 @@
-import config from '../config';
+import { knexSnakeCaseMappers } from 'objection';
+import config from './config';
+// Update with your config settings.
 
-const dbConfig = {
+export default {
   development: {
     client: 'postgres',
     useNullAsDefault: true,
@@ -14,7 +16,9 @@ const dbConfig = {
       min: 2,
       max: 10,
     },
+    migrations: {
+      tableName: 'knex_migrations',
+    },
   },
+  ...knexSnakeCaseMappers(),
 };
-
-export const getDbConfig = (env: string) => dbConfig[env];
