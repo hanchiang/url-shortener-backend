@@ -10,6 +10,7 @@ services:
       - POSTGRES_DB=url-shortener
       - POSTGRES_PORT=5432
       - REDIS_URL=redis://redis:6379/0
+      - BASE_DOMAIN=http://localhost:3000
     ports:
       - "3000:3000"
     depends_on:
