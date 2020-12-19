@@ -28,7 +28,7 @@
     "build": "npm run build-ts  ",
     "serve": "node dist/bin/www.js",
     "test": "npm run test-unit && npm run test-integration",
-    "test-integration": "nyc ts-mocha test/integration/index.ts",
+    "test-integration": "nyc ts-mocha --file test/helper.ts test/integration/index.ts",
     "test-unit": "nyc ts-mocha test/unit/index.ts",
     "build-ts": "tsc",
     "watch-ts": "tsc -w",

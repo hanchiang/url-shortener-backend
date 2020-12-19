@@ -8,8 +8,17 @@ import dbConfig from '../knexfile';
 const getDbConfig = (env: string) => dbConfig[env];
 
 export const initDb = () => {
-  const options = knexStringCase(getDbConfig(config.nodeEnv));
-  const knex = Knex(options);
+  const knex = Knex(getKnexOptions());
   Model.knex(knex);
   Redis.getInstance();
 };
+
+export const closeDb = async () => {
+  const knex = Knex(getKnexOptions());
+  await knex.destroy();
+  await Redis.close();
+}
+
+const getKnexOptions = () => {
+  return knexStringCase(getDbConfig(config.nodeEnv)); 
+}
