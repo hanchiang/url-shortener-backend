@@ -1,0 +1,35 @@
+import { Model } from 'objection';
+import { MAX_URL_STORAGE_DURATION } from '../constants';
+
+export default class Url extends Model {
+  id!: string;
+  originalUrl!: string;
+
+  createdAt!: Date;
+  expireAt!: Date;
+
+  static get tableName() {
+    return 'url';
+  }
+
+  static get idColumn() {
+    return 'id';
+  }
+
+  $beforeInsert() {
+    const now = new Date();
+    this.createdAt = now;
+    this.expireAt = new Date(now.getTime() + MAX_URL_STORAGE_DURATION);
+  }
+
+  static get jsonSchema() {
+    return {
+      type: 'object',
+      required: ['id', 'originalUrl'],
+      properties: {
+        id: { type: 'string' },
+        originalUrl: { type: 'string' },
+      },
+    };
+  }
+}
