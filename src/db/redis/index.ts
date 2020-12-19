@@ -1,12 +1,12 @@
 import redis, { RedisClient, ClientOpts } from 'redis';
-import Promise from 'bluebird'
+import Promise from 'bluebird';
 import config from '../../config';
 
-Promise.promisifyAll(redis)
+Promise.promisifyAll(redis);
 
 export class Redis {
   private static instance: Redis;
-  private conn: RedisClient
+  private conn: RedisClient;
   private constructor(redis: RedisClient) {
     this.conn = redis;
   }
