@@ -20,9 +20,9 @@ export const closeDb = async () => {
   await Redis.close();
 };
 
-const flushDb = async () => {
+export const flushDb = async () => {
   const knex = Knex(getKnexOptions());
-  knex.schema.dropTableIfExists('url');
+  await knex('url').del();
   await Redis.flush();
 };
 
