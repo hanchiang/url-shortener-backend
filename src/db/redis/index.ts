@@ -22,11 +22,19 @@ export class Redis {
     return redis.createClient(options);
   }
 
-  public static close(): void {
-    this.instance.conn.quit();
+  public static close(): Promise<void> {
+    return new Promise((resolve) => {
+      this.instance.conn.quit((err, data) => {
+        this.instance.conn = null;
+        this.instance = null;
+        resolve();
+      });
+    });
   }
 
-  public static flush(): void {
-    this.instance.conn.flushdb();
+  public static flush(): Promise<void> {
+    return new Promise((resolve) => {
+      this.instance.conn.flushdb((err, data) => resolve());
+    });
   }
 }

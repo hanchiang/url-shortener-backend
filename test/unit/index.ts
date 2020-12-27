@@ -1,7 +1,3 @@
-import { expect } from 'chai';
-
-describe('Unit test', () => {
-  it('should pass', () => {
-    expect(true).to.equal(true);
-  });
-});
+// import './services/keyGeneration';
+import './services/urlShortener';
+// import './utils/urlSafe';

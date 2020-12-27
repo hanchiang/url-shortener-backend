@@ -1,4 +1,8 @@
-import { closeDb } from '../src/db';
+import { initDb, closeDb } from '../src/db';
+
+before(async () => {
+  await initDb();
+});
 
 after(async () => {
   await closeDb();
