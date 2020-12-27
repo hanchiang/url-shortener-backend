@@ -3,6 +3,17 @@
 This project is a URL shortener service that allows users to create a short version of a URL.  
 Some examples are [bit.ly](https://bitly.com/) and [tinyurl.com](https://tinyurl.com/)
 
+# Libraries
+* Programming language: Typescript
+* Environment: Node
+* Server framework: Express
+* Database: PostgreSQL, Redis
+* Query builder: Knex.
+* ORM: Objection
+* Test: Mocha
+* Lint: Eslint
+* Code formatter: Prettier
+
 # Prerequisites
 * Install docker: https://docs.docker.com/get-docker/
 * Install docker compose: https://docs.docker.com/compose/install/
@@ -24,6 +35,7 @@ Some examples are [bit.ly](https://bitly.com/) and [tinyurl.com](https://tinyurl
 * Stop: `docker-compose down`
 
 # Run without docker compose
+* Create `.env` file from `.env.sample`
 * Install dependencies: `npm install`
 * Start server: `npm run debug`
 

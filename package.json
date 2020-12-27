@@ -29,7 +29,7 @@
     "serve": "node dist/bin/www.js",
     "test": "npm run test-unit && npm run test-integration",
     "test-integration": "nyc ts-mocha --file test/helper.ts test/integration/index.ts",
-    "test-unit": "nyc ts-mocha test/unit/index.ts",
+    "test-unit": "nyc ts-mocha --file test/helper.ts test/unit/index.ts",
     "build-ts": "tsc",
     "watch-ts": "tsc -w",
     "prettier:fix": "prettier --write \"**/*.+(ts|js|json)\"",

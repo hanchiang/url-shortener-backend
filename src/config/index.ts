@@ -1,5 +1,10 @@
 import dotenv from 'dotenv';
-dotenv.config();
+
+if (process.env.NODE_ENV === 'test') {
+  dotenv.config({ path: '.env.test' });
+} else {
+  dotenv.config();
+}
 
 const config = {
   nodeEnv: process.env.NODE_ENV || 'development',
@@ -8,7 +13,7 @@ const config = {
   postgresUser: process.env.POSTGRES_USER || 'root',
   postgresPassword: process.env.POSTGRES_PASSWORD || 'root',
   postgresPort: parseInt(process.env.POSTGRES_PORT) || 5432,
-  redisUrl: process.env['REDIS_URL'] || 'redis://localhost:6379/0',
+  redisUrl: process.env.REDIS_URL || 'redis://localhost:6379/0',
   baseDomain: process.env.BASE_DOMAIN || 'http://localhost:3000',
 };
 
