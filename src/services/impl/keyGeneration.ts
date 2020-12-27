@@ -1,7 +1,6 @@
 import crypto from 'crypto';
-import { KeyGeneration } from '../key-generation';
-import { Redis } from '../../db/redis';
-import { urlSafe } from '../../utils/url-safe';
+import { KeyGeneration } from '../keyGeneration';
+import { urlSafe } from '../../utils/urlSafe';
 
 export class KeyGenerationService implements KeyGeneration {
   public static readonly NUM_KEYS_TO_GENERATE = 50;

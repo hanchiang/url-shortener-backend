@@ -5,7 +5,7 @@ import logger from '../utils/logger';
 import { throwError } from '../utils/error';
 import { CustomError } from '../types/error';
 import { ErrorResponse, SuccessRespone } from '../types/response';
-import formatObjectionError from '../utils/objection-error';
+import formatObjectionError from '../utils/objectionError';
 
 export const notFound = (req: Request, res: Response, next: NextFunction) => {
   throwError({

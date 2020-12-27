@@ -10,7 +10,7 @@ import {
 } from 'objection';
 
 import { ObjectionError } from '../types/objection';
-import { ErrorCode } from '../utils/error';
+import { ErrorCode } from './error';
 
 export default (err): ObjectionError | void => {
   if (err instanceof ValidationError) {

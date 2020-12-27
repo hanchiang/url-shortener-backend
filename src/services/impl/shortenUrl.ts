@@ -1,17 +1,15 @@
 import { ShortenUrl } from '../shorten-url';
-import { KeyGenerationService } from './key-generation';
-import { KeyGeneration } from '../key-generation';
+import { KeyGenerationService } from './keyGeneration';
+import { KeyGeneration } from '../keyGeneration';
 import config from '../../config';
 import { Url } from '../../models/url';
 import { throwError, ErrorCode } from '../../utils/error';
-import { urlSafe } from '../../utils/url-safe';
+import { urlSafe } from '../../utils/urlSafe';
 
 export class ShortenUrlService implements ShortenUrl {
-  // private urlRepository: Repository<Url>
   private keyGenerationService: KeyGeneration;
   constructor() {
     this.keyGenerationService = new KeyGenerationService();
-    // this.urlRepository = getRepository(Url);
   }
   public async shortenUrl(
     originalUrl: string,
@@ -22,7 +20,7 @@ export class ShortenUrlService implements ShortenUrl {
       await this.ensureAliasDoesNotExist(alias);
       key = urlSafe(alias);
     } else {
-      key = await this.getAvailabkeKey();
+      key = await this.getAvailableKey();
     }
 
     await Url.query().insert({
@@ -41,7 +39,7 @@ export class ShortenUrlService implements ShortenUrl {
       });
     }
   }
-  private async getAvailabkeKey(): Promise<string> {
+  private async getAvailableKey(): Promise<string> {
     let result;
     let foundAvailableKey = false;
     do {

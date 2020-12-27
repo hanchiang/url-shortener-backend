@@ -5,7 +5,7 @@ import {
 } from 'express-joi-validation';
 import { ShortenUrlRequest } from './types';
 import { ShortenUrlSchema } from '../controllers/validators';
-import { ShortenUrlService } from '../services/impl/shorten-url';
+import { ShortenUrlService } from '../services/impl/shortenUrl';
 
 export const shortenUrl = async (
   req: ValidatedRequest<ShortenUrlSchema>,
