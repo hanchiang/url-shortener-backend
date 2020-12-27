@@ -1,4 +1,4 @@
-export interface ShortenUrl {
+export interface UrlShortenerService {
   /**
    * @returns The shortened url
    * @param url

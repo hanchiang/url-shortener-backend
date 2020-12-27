@@ -1,15 +1,15 @@
-import { ShortenUrl } from '../shorten-url';
-import { KeyGenerationService } from './keyGeneration';
+import { UrlShortenerService } from '../urlShortener';
+import { KeyGenerationServiceImpl } from './keyGeneration';
 import { KeyGeneration } from '../keyGeneration';
 import config from '../../config';
 import { Url } from '../../models/url';
 import { throwError, ErrorCode } from '../../utils/error';
 import { urlSafe } from '../../utils/urlSafe';
 
-export class ShortenUrlService implements ShortenUrl {
+export class UrlShortenerServiceImpl implements UrlShortenerService {
   private keyGenerationService: KeyGeneration;
   constructor() {
-    this.keyGenerationService = new KeyGenerationService();
+    this.keyGenerationService = new KeyGenerationServiceImpl();
   }
   public async shortenUrl(
     originalUrl: string,
@@ -44,7 +44,6 @@ export class ShortenUrlService implements ShortenUrl {
     let foundAvailableKey = false;
     do {
       const keys = this.keyGenerationService.generate();
-
       const urlsInDb = await Url.query().findByIds(keys);
       const keysUsed: { [key: string]: boolean } = {};
       for (const urlInDb of urlsInDb) {
