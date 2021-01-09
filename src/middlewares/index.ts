@@ -1,10 +1,15 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Request, Response, NextFunction } from 'express';
 import { ExpressJoiError } from 'express-joi-validation';
 import config from '../config';
 import logger from '../utils/logger';
 import { throwError } from '../utils/error';
 import { CustomError } from '../types/error';
-import { ErrorResponse, SuccessRespone } from '../types/response';
+import {
+  ErrorResponse,
+  SuccessResponse,
+  ErrorPayload,
+} from '../types/response';
 import formatObjectionError from '../utils/objectionError';
 
 export const notFound = (req: Request, res: Response, next: NextFunction) => {
@@ -25,18 +30,19 @@ export const formatResponse = (
   const oldJson = res.json;
 
   res.json = function (data) {
-    const retVal: Partial<SuccessRespone | ErrorResponse> = {};
+    const retVal: Partial<SuccessResponse | ErrorResponse> = {};
     if (res.statusCode >= 400) {
       logError(data);
       (retVal as ErrorResponse).error = data;
     } else {
-      (retVal as SuccessRespone).payload = data;
+      (retVal as SuccessResponse).payload = data;
     }
     return oldJson.call(res, retVal);
   };
   next();
 };
 
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 const logError = (err: any) => {
   const errorClone = { ...err };
   logger.error(errorClone);
@@ -69,13 +75,13 @@ export const errorHandler = (
       ({ message, status, meta, type } = objectionError);
     } else {
       err = err as CustomError;
-      status = status || 500;
-      message = message || 'An error occurred';
+      status = status || err.status || 500;
+      message = message || err.message || 'An error occurred';
       stack = err.stack;
     }
   }
 
-  const error: any = { message, type, meta };
+  const error: ErrorPayload = { message, type, meta };
   if (config.nodeEnv !== 'production') {
     error.stack = stack;
   }
