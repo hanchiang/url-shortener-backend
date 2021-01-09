@@ -1,0 +1,23 @@
+dist: xenial
+language: node_js
+node-js:
+  - lts/*
+
+stages:
+  - test
+  - build
+
+services:
+  - docker
+
+cache: npm
+
+before_script:
+  - docker-compose up -d
+
+jobs:
+  include:
+    - stage: test
+      script: npm test
+    - stage: build
+      script: docker build -t url-shortener .
