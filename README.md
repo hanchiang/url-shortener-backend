@@ -73,6 +73,9 @@ e.g. https://www.fodors.com/community/travel-tips-and-trip-ideas/should-i-go-for
   * Queries per sec: 5B / (30 days * 24 hours * 60 * mins * 60 secs) = 1929
 
 ### Storage
+PostgreSQL: Shortened URLs and original URLs  
+Redis: Cache shortened URLs and original URLs
+
 URL table
 * hash: varchar(16)
 * originalUrl: varchar(1024)
@@ -98,11 +101,6 @@ Max usage: 10% * 2.4B URLs * (16 bytes hash + 1024 bytes original url) = 249.6GB
 
 ## Read request
 <img src="images/url-shortener-read.png" width="700" />
-
-
-## Storage
-PostgreSQL: Shortened URLs and original URLs
-Redis: Cache shortened URLs and original URLs
 
 ## Key generation
 Generates a certain number of random keys.  

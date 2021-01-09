@@ -15,5 +15,6 @@ router.post(
   validator.body(shortenUrlValidator),
   middlewares.catchErrors(controllers.shortenUrl)
 );
+router.get('/:urlKey', middlewares.catchErrors(controllers.redirectUrl));
 
 export default router;
