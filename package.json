@@ -10,7 +10,7 @@
   "license": "MIT",
   "husky": {
     "hooks": {
-      "pre-commit": "npm run eslint:check && npm run prettier:check"
+      "pre-push": "npm run eslint:check && npm run prettier:check"
     }
   },
   "lint-staged": {
@@ -28,8 +28,8 @@
     "build": "npm run build-ts  ",
     "serve": "node dist/bin/www.js",
     "test": "npm run test-unit && npm run test-integration",
-    "test-integration": "nyc ts-mocha --file test/helper.ts test/integration/index.ts",
-    "test-unit": "nyc ts-mocha --file test/helper.ts test/unit/index.ts",
+    "test-integration": "nyc ts-mocha test/integration/index.ts",
+    "test-unit": "nyc ts-mocha test/helper.ts test/unit/index.ts",
     "build-ts": "tsc",
     "watch-ts": "tsc -w",
     "prettier:fix": "prettier --write \"**/*.+(ts|js|json)\"",
@@ -39,7 +39,11 @@
     "copy-static-assets": "ts-node copyStaticAssets.ts",
     "debug": "npm run watch-debug",
     "serve-debug": "ts-node-dev src/server.ts",
-    "watch-debug": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run serve-debug\""
+    "watch-debug": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run serve-debug\"",
+    "migrate-up:dev": "knex migrate:up --knexfile ./src/knexfile.ts",
+    "migrate-up:test": "NODE_ENV=test knex migrate:up --knexfile ./src/knexfile.ts",
+    "migrate-down:dev": "knex migrate:down --knexfile ./src/knexfile.ts",
+    "migrate-down:test": "NODE_ENV=test knex migrate:down --knexfile ./src/knexfile.ts"
   },
   "dependencies": {
     "bluebird": "^3.7.2",

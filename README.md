@@ -117,3 +117,6 @@ Each key contains 6 characters.
   * Remove URL after certain period of inactivity(no redirection request)
 * Rate limit: Set a limit on the number of URLs that can be shortened in a specified time frame
 * Check URL: Check where a shortened URL redirects to
+
+# TODO
+* Database connection does not close in tests
