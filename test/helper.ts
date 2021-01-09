@@ -6,7 +6,7 @@ before(async () => {
 
 afterEach(async () => {
   await flushDb();
-})
+});
 
 after(async () => {
   await closeDb();

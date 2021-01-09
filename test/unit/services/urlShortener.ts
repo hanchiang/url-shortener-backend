@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import { UrlShortenerServiceImpl } from '../../../src/services/impl/urlShortener';
+import { ErrorCode } from '../../../src/utils/error';
 
 describe('UrlShortenerService unit tests', () => {
   it('Should shorten url with alias if it does not already exist', async () => {
@@ -18,11 +19,13 @@ describe('UrlShortenerService unit tests', () => {
     let error;
     try {
       await urlShortenerService.shortenUrl(url, alias);
-    } catch(e) {
+    } catch (e) {
       error = e;
     }
     expect(error).to.not.be.undefined;
-    expect(error.status).equal(409);
-    expect(error.message).equal(`Alias ${alias} is already taken. Please use another alias`)
+    expect(error.status).equal(ErrorCode.CONFLICT);
+    expect(error.message).equal(
+      `Alias ${alias} is already taken. Please use another alias`
+    );
   });
 });

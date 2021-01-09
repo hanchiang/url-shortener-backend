@@ -4,6 +4,7 @@ import request from 'supertest';
 
 import app from '../../src/app';
 import config from '../config';
+import { ErrorCode } from '../../src/utils/error';
 
 let server: Server;
 
@@ -21,10 +22,20 @@ describe('Integration test', () => {
     });
   });
 
-  it('should pass', async () => {
-    const res = await request(server).get('/').expect(200);
-    expect(res.body.payload.includes('Service is up and running')).to.equal(
-      true
-    );
+  it('Should shorten url', async () => {
+    const url = 'https://www.google.com';
+    const alias = 'myalias';
+    const res = await request(server).post('/urls').send({ url, alias });
+    expect(res.status).to.equal(200);
+  });
+
+  it('Should throw error if alias is taken', async () => {
+    const url = 'https://www.google.com';
+    const alias = 'myalias';
+    let res = await request(server).post('/urls').send({ url, alias });
+    expect(res.status).to.equal(200);
+
+    res = await request(server).post('/urls').send({ url, alias });
+    expect(res.status).to.equal(ErrorCode.CONFLICT);
   });
 });
