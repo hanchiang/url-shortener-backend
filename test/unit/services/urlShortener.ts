@@ -13,7 +13,7 @@ describe('UrlShortenerService unit tests', () => {
 
   it('Should throw error if alias is too long', async () => {
     const url = 'www.google.com';
-    const alias = faker.lorem.words(5);
+    const alias = faker.lorem.words(50);
     const urlShortenerService = new UrlShortenerServiceImpl();
     await expect(urlShortenerService.shortenUrl(url, alias)).to.be.rejected;
   });
