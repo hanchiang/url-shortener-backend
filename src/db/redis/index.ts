@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import redis, { RedisClient, ClientOpts } from 'redis';
 import Promise from 'bluebird';
 import config from '../../config';
