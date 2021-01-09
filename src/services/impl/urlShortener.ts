@@ -30,6 +30,17 @@ export class UrlShortenerServiceImpl implements UrlShortenerService {
     return this.constructShortenedUrl(key);
   }
 
+  public async getOriginalUrl(urlKey: string): Promise<string> {
+    const urlInDb = await Url.query().findById(urlKey);
+    if (!urlInDb) {
+      throwError({
+        status: ErrorCode.NOT_FOUND,
+        message: `/${urlKey} does not exist`,
+      });
+    }
+    return urlInDb.originalUrl;
+  }
+
   private async ensureAliasDoesNotExist(alias: string): Promise<void> {
     const url = await Url.query().findById(alias);
     if (url) {

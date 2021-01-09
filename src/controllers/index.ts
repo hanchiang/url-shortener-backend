@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import {
   ValidatedRequest,
   // Extend from this to define a valid schema type/interface
@@ -15,4 +15,11 @@ export const shortenUrl = async (
   const shortenUrlService = new UrlShortenerServiceImpl();
   const shortenedUrl = await shortenUrlService.shortenUrl(url, alias);
   res.json(shortenedUrl);
+};
+
+export const redirectUrl = async (req: Request, res: Response) => {
+  const { urlKey } = req.params;
+  const shortenUrlService = new UrlShortenerServiceImpl();
+  const originalUrl = await shortenUrlService.getOriginalUrl(urlKey);
+  res.redirect(originalUrl);
 };
