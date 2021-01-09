@@ -7,6 +7,7 @@ const options: winston.LoggerOptions = {
     }),
     new winston.transports.File({ filename: 'debug.log', level: 'debug' }),
   ],
+  silent: process.env.NODE_ENV === 'test',
 };
 
 const logger = winston.createLogger(options);

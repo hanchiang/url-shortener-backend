@@ -1,7 +1,7 @@
 import { Model } from 'objection';
 import { MAX_URL_STORAGE_DURATION } from '../constants';
 
-export default class Url extends Model {
+export class Url extends Model {
   id!: string;
   originalUrl!: string;
 
@@ -29,6 +29,8 @@ export default class Url extends Model {
       properties: {
         id: { type: 'string' },
         originalUrl: { type: 'string' },
+        createdAt: { type: 'date' },
+        expireAt: { type: 'date' },
       },
     };
   }

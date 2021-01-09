@@ -3,6 +3,17 @@
 This project is a URL shortener service that allows users to create a short version of a URL.  
 Some examples are [bit.ly](https://bitly.com/) and [tinyurl.com](https://tinyurl.com/)
 
+# Libraries
+* Programming language: Typescript
+* Environment: Node
+* Server framework: Express
+* Database: PostgreSQL, Redis
+* Query builder: Knex.
+* ORM: Objection
+* Test: Mocha
+* Lint: Eslint
+* Code formatter: Prettier
+
 # Prerequisites
 * Install docker: https://docs.docker.com/get-docker/
 * Install docker compose: https://docs.docker.com/compose/install/
@@ -24,6 +35,7 @@ Some examples are [bit.ly](https://bitly.com/) and [tinyurl.com](https://tinyurl
 * Stop: `docker-compose down`
 
 # Run without docker compose
+* Create `.env` file from `.env.sample`
 * Install dependencies: `npm install`
 * Start server: `npm run debug`
 
@@ -72,8 +84,8 @@ Max size of an URL entry in DB: 16 + 1024 + 8 + 8 = 1048 bytes
 Storage: 2.4B * 1048 bytes per URL = 2.5152TB
 
 **Encoding of URL**
-Generate a cryptographically strong pseudo random data, encode it with base62.
-A 6 character key will result in 62^2 = 56.8B possible strings
+Generate a cryptographically strong pseudo random data, encode it with base64.
+A 6 character key will result in 64^6 = 68.7B possible strings
 
 **Memory**
 Let's assume 10% of the URLs are accessed frequently and will be cached.  
@@ -105,3 +117,7 @@ Each key contains 6 characters.
   * Remove URL after certain period of inactivity(no redirection request)
 * Rate limit: Set a limit on the number of URLs that can be shortened in a specified time frame
 * Check URL: Check where a shortened URL redirects to
+
+# TODO
+* Database connection does not close in tests
+* CI
