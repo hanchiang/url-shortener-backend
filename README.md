@@ -120,3 +120,4 @@ Each key contains 6 characters.
 
 # TODO
 * Database connection does not close in tests
+* CI
