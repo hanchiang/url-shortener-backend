@@ -1,0 +1,37 @@
+dist: xenial
+language: node_js
+node-js:
+  - lts/*
+
+stages:
+  - test
+  - build
+
+services:
+  - docker
+  - redis-server
+
+addons:
+  postgresql: "13.1"
+  apt:
+    packages:
+      - postgresql-13
+      - postgresql-client-13
+
+cache: npm
+
+env:
+  global:
+  - PGPORT=543
+
+before_script:
+  - psql -c 'CREATE DATABASE url-shortener-test;'
+  - psql -c 'CREATE USER root;'
+  - psql --dbname=url-shortener-test --file=src/db/postgres/schema.sql
+
+jobs:
+  include:
+    - stage: test
+      script: npm test
+    - stage: build
+      script: docker build url-shortener .
