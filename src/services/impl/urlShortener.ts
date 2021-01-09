@@ -43,15 +43,15 @@ export class UrlShortenerServiceImpl implements UrlShortenerService {
     let result;
     let foundAvailableKey = false;
     do {
-      const keys = this.keyGenerationService.generate();
-      const urlsInDb = await Url.query().findByIds(keys);
+      const generatedKeys = this.keyGenerationService.generate();
+      const urlsInDb = await Url.query().findByIds(generatedKeys);
       const keysUsed: { [key: string]: boolean } = {};
       for (const urlInDb of urlsInDb) {
         keysUsed[urlInDb.id] = true;
       }
-      for (const key of keys) {
-        if (!keysUsed[key]) {
-          result = key;
+      for (const generatedKey of generatedKeys) {
+        if (!keysUsed[generatedKey]) {
+          result = generatedKey;
           foundAvailableKey = true;
           break;
         }
@@ -60,7 +60,7 @@ export class UrlShortenerServiceImpl implements UrlShortenerService {
     return result;
   }
 
-  private constructShortenedUrl(urlKey: string): string {
+  public constructShortenedUrl(urlKey: string): string {
     return `${config.baseDomain}/${urlKey}`;
   }
 }
