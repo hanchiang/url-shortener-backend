@@ -1,0 +1,3 @@
+CPU: Intel i7-8550U, 1.80Ghz
+Memory: 16GB
+

@@ -1,0 +1,11 @@
+Nodejs:
+CPU: 62-71%
+Memory: 355MB
+
+Postgres:
+CPU: 41-46%
+Memory: 161MB
+
+Network:
+In: 730-780 KB/s
+Out: 230-270 KB/s
