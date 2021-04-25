@@ -144,4 +144,5 @@ Each key contains 6 characters.
 * Check URL: Check where a shortened URL redirects to
 
 # TODO
+* Use redis when receiving redirect requests
 * Database connection does not close in tests
