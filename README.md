@@ -41,6 +41,27 @@ Some examples are [bit.ly](https://bitly.com/) and [tinyurl.com](https://tinyurl
 * Install dependencies: `npm install`
 * Start server: `npm run debug`
 
+# API
+1. Shorten a URL  
+`POST /urls`
+**Request body**
+```js
+{
+  url: string
+  alias?: string
+}
+```
+
+**Response**  
+```js
+{
+  "payload": string
+}
+```
+
+2. Redirect shortened URL to original URL  
+`GET /:urlKey`
+
 # Functional requirements
 
 ## 1. Shorten a url
