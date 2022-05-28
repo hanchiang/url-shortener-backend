@@ -13,7 +13,7 @@ services:
       - POSTGRES_HOST=postgres
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
-      - POSTGRES_DB=url-shortener
+      - POSTGRES_DB=url_shortener
       - POSTGRES_PORT=5432
       - REDIS_URL=redis://redis:6379/0
       - BASE_DOMAIN=http://localhost:3000
@@ -27,7 +27,7 @@ services:
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
-      - POSTGRES_DB=url-shortener
+      - POSTGRES_DB=url_shortener
     ports:
       - "5432:5432"
 

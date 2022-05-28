@@ -2,8 +2,8 @@
 
 -- DROP TABLE public.url;
 
-DROP DATABASE IF EXISTS 'url-shortener-test';
-CREATE DATABASE 'url-shortener-test';
+DROP DATABASE IF EXISTS url_shortener_test;
+CREATE DATABASE url_shortener_test;
 
 CREATE TABLE public.url
 (
