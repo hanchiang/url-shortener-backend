@@ -5,7 +5,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Run docker compose
-        run: docker-compose up -d
-      - name: Tests
-        run: npm test
+      - name: Run tests with docker compose
+        run: ./docker-compose.sh up test
