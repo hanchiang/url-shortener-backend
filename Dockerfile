@@ -32,7 +32,7 @@ CMD [ "npm", "run", "debug" ]
 FROM dev as test
 ENV NODE_ENV test
 ENV PORT 3000
-
+USER node
 CMD ["npm", "test"]
 
 # 4. --- Release ---
