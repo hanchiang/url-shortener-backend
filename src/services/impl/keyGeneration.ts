@@ -4,7 +4,7 @@ import { urlSafe } from '../../utils/urlSafe';
 
 export class KeyGenerationServiceImpl implements KeyGeneration {
   public static readonly NUM_KEYS_TO_GENERATE = 50;
-  public static readonly KEY_LENGTH = 6;
+  public static readonly KEY_LENGTH = 7;
 
   public generate(
     num: number = KeyGenerationServiceImpl.NUM_KEYS_TO_GENERATE
