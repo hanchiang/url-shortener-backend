@@ -16,12 +16,16 @@ describe('Shorten Url integration test', () => {
     });
   });
 
-  afterEach(async () => {
-    return new Promise((resolve) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      server.close(resolve as any);
-    });
-  });
+  afterEach(async() => {
+    return new Promise((resolve, reject) => {
+      server.close((err) => {
+        if (err) {
+          reject(err);
+        }
+        resolve();
+      });
+    })
+  })
 
   it('Should shorten url', async () => {
     const url = 'https://www.google.com';
