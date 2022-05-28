@@ -48,11 +48,9 @@ const logError = (err: any) => {
   logger.error(errorClone);
 };
 
-export const catchErrors = (action: Function) => (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => action(req, res).catch(next);
+export const catchErrors =
+  (action: Function) => (req: Request, res: Response, next: NextFunction) =>
+    action(req, res).catch(next);
 
 export const errorHandler = (
   err: CustomError | ExpressJoiError,
