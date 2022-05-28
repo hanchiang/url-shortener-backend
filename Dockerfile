@@ -10,11 +10,11 @@ WORKDIR /opt/node_app
 # but we have to manually enable it. We put it here so npm installs dependencies as the same
 # user who runs the app. 
 # https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md#non-root-user
-COPY package*.json ./
+COPY ./package*.json ./
 
 
-# 2. --- Dependencies ---
-FROM base AS dependencies
+# 2. --- dev ---
+FROM base AS dev
 ENV NODE_ENV development
 ENV PORT 3000
 
@@ -28,7 +28,14 @@ USER node
 CMD [ "npm", "run", "debug" ]
 
 
-# 3. --- Release ---
+# 3. --- test ---
+FROM dev as test
+ENV NODE_ENV test
+ENV PORT 3000
+
+CMD ["npm", "test"]
+
+# 4. --- Release ---
 FROM base AS release
 ENV NODE_ENV production
 ENV PORT 3000

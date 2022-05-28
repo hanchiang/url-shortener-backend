@@ -2,6 +2,12 @@ version: '3.4'
 
 services:
   backend:
+    build:
+      context: .
+      target: dev
+      dockerfile: Dockerfile
+    image: url-shortener:dev
+    command: npm run debug
     environment:
       - NODE_ENV=development
       - POSTGRES_HOST=postgres
