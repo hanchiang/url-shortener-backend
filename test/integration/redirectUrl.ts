@@ -15,7 +15,7 @@ describe('Redirect Url integration test', () => {
     });
   });
 
-  afterEach(async() => {
+  afterEach(async () => {
     return new Promise((resolve, reject) => {
       server.close((err) => {
         if (err) {
@@ -23,8 +23,8 @@ describe('Redirect Url integration test', () => {
         }
         resolve();
       });
-    })
-  })
+    });
+  });
 
   it('should throw error if url key does not exist', async () => {
     const urlKey = 'unknown';

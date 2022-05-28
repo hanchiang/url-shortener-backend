@@ -16,7 +16,7 @@ describe('Shorten Url integration test', () => {
     });
   });
 
-  afterEach(async() => {
+  afterEach(async () => {
     return new Promise((resolve, reject) => {
       server.close((err) => {
         if (err) {
@@ -24,8 +24,8 @@ describe('Shorten Url integration test', () => {
         }
         resolve();
       });
-    })
-  })
+    });
+  });
 
   it('Should shorten url', async () => {
     const url = 'https://www.google.com';
