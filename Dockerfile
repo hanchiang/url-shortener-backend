@@ -1,5 +1,5 @@
 # 1. --- Base ---
-FROM node:12.16-stretch-slim AS base
+FROM node:16-stretch-slim AS base
 
 # install dependencies first, in a different location for easier app bind mounting for local development
 # due to default /opt permissions we have to create the dir with root and change perms
@@ -10,7 +10,6 @@ WORKDIR /opt/node_app
 # but we have to manually enable it. We put it here so npm installs dependencies as the same
 # user who runs the app. 
 # https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md#non-root-user
-USER node
 COPY package*.json ./
 
 
@@ -25,6 +24,7 @@ ENV PATH /opt/node_app/node_modules/.bin:$PATH
 # copy in our source code last, as it changes the most
 COPY --chown=node:node . .
 RUN npm run build
+USER node
 CMD [ "npm", "run", "debug" ]
 
 
@@ -36,4 +36,5 @@ ENV PATH /opt/node_app/node_modules/.bin:$PATH
 
 COPY --from=dependencies /opt/node_app/dist ./dist
 RUN npm ci --only=production
+USER node
 CMD [ "npm", "run", "start" ]
