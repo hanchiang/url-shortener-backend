@@ -2,15 +2,21 @@ import { UrlShortenerService } from '../urlShortener';
 import { KeyGenerationServiceImpl } from './keyGeneration';
 import { KeyGeneration } from '../keyGeneration';
 import config from '../../config';
-import { Url } from '../../models/url';
 import { throwError, ErrorCode } from '../../utils/error';
 import { urlSafe } from '../../utils/urlSafe';
+import { MemoryStore } from '../../db/redis';
+import { UrlDao, UrlDaoImpl } from '../../db/postgres/dao/urlDao';
 
 export class UrlShortenerServiceImpl implements UrlShortenerService {
   private keyGenerationService: KeyGeneration;
-  constructor() {
+  private urlDao: UrlDao;
+
+  constructor(private redis: MemoryStore) {
+    // TODO:
     this.keyGenerationService = new KeyGenerationServiceImpl();
+    this.urlDao = new UrlDaoImpl();
   }
+
   public async shortenUrl(
     originalUrl: string,
     alias?: string
@@ -23,26 +29,30 @@ export class UrlShortenerServiceImpl implements UrlShortenerService {
       key = await this.getAvailableKey();
     }
 
-    await Url.query().insert({
-      id: key,
-      originalUrl,
-    });
+    await this.urlDao.insert(key, originalUrl);
     return this.constructShortenedUrl(key);
   }
 
   public async getOriginalUrl(urlKey: string): Promise<string> {
-    const urlInDb = await Url.query().findById(urlKey);
+    const cachedData = await this.redis.getString(urlKey);
+    // TODO: Test. Log cache hit or miss
+    if (cachedData) {
+      return cachedData;
+    }
+
+    const urlInDb = await this.urlDao.findById(urlKey);
     if (!urlInDb) {
       throwError({
         status: ErrorCode.NOT_FOUND,
         message: `/${urlKey} does not exist`,
       });
     }
+    await this.redis.setString(urlKey, urlInDb.originalUrl);
     return urlInDb.originalUrl;
   }
 
   private async ensureAliasDoesNotExist(alias: string): Promise<void> {
-    const url = await Url.query().findById(alias);
+    const url = await this.urlDao.findById(alias);
     if (url) {
       throwError({
         status: ErrorCode.CONFLICT,
@@ -50,12 +60,13 @@ export class UrlShortenerServiceImpl implements UrlShortenerService {
       });
     }
   }
+
   private async getAvailableKey(): Promise<string> {
     let result;
     let foundAvailableKey = false;
     do {
       const generatedKeys = this.keyGenerationService.generate();
-      const urlsInDb = await Url.query().findByIds(generatedKeys);
+      const urlsInDb = await this.urlDao.findByIds(generatedKeys);
       const keysUsed: { [key: string]: boolean } = {};
       for (const urlInDb of urlsInDb) {
         keysUsed[urlInDb.id] = true;
