@@ -38,7 +38,7 @@ Some examples are [bit.ly](https://bitly.com/) and [tinyurl.com](https://tinyurl
 * Stop: `docker-compose down`
 
 # Run without docker compose
-* Create `.env` file from `.env.sample`
+* Create `.env` file from `.env.sample`, filling in the missing details
 * Install dependencies: `npm install`
 * Start server: `npm run debug`
 

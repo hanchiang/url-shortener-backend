@@ -2,6 +2,9 @@
   "name": "url-shortener",
   "version": "0.1.0",
   "description": "A starting point for Node.js express apps with TypeScript",
+  "engines": {
+    "node": ">=16"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/Microsoft/TypeScript-Node-Starter"
@@ -41,7 +44,7 @@
     "serve-debug": "ts-node-dev src/server.ts",
     "watch-debug": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run serve-debug\"",
     "migrate-up:dev": "knex migrate:up --knexfile ./src/knexfile.ts",
-    "migrate-up:test": "NODE_ENV=test knex migrate:up --knexfile ./src/knexfile.ts",
+    "migrate-up:test": "n_ENV=test knex migrate:up --knexfile ./src/knexfile.ts",
     "migrate-down:dev": "knex migrate:down --knexfile ./src/knexfile.ts",
     "migrate-down:test": "NODE_ENV=test knex migrate:down --knexfile ./src/knexfile.ts"
   },
