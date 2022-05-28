@@ -22,6 +22,7 @@ Some examples are [bit.ly](https://bitly.com/) and [tinyurl.com](https://tinyurl
 # Project structure
 * `src/middlewares/`: Express middlewares such as error handler, try-catch function
 * `src/config/`: Application level configurations
+* `src/db/`: Database config, sql schema, domain model
 * `src/routes/`: Express routes
 * `src/controllers/`: Route handler logic
 * `src/util/`: Utilities
@@ -72,6 +73,13 @@ e.g. https://www.fodors.com/community/travel-tips-and-trip-ideas/should-i-go-for
 
 * Can shorten a URL with custom alias  
 e.g. https://www.fodors.com/community/travel-tips-and-trip-ideas/should-i-go-for-a-gopro-dslr-or-drone-1140434/ -> https://preview.tinyurl.com/goprodslrdrone
+
+**Short URL**
+We will generate the short url using base62 conversion instead of passing the URL through a hash function.
+
+This solves the issue of hash collision due to truncation of the hash value because it is too long.
+
+However, this means that the same URL will not produce the same hash.
 
 ## 2. Visit a shortened url
 * Visiting a shortened URL with or without custom alias should redirect to the original URL.
@@ -135,7 +143,6 @@ Each key contains 6 characters.
 
 # Ideas
 * Horizontal scaling: application, database and cache servers
-* Performance: Retrieve keys from redis and store in memory
 * Generate keys up front and periodically instead of on demand
 * Analytics: Track the usage of URLs
   * How many redirects per day
@@ -145,4 +152,7 @@ Each key contains 6 characters.
 
 # TODO
 * Use redis when receiving redirect requests
-* Database connection does not close in tests
+* URL shortening: Check if URL is stored in the database. If it is, return the short url
+* Key generation: do not check against the database for existing short urls because there can still be a conflict due to concurrency. Let the database handle the conflict
+* load test with multiple instances of API service and database
+* Update requests per day to 100M

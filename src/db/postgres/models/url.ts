@@ -1,5 +1,5 @@
 import { Model } from 'objection';
-import { MAX_URL_STORAGE_DURATION } from '../constants';
+import { MAX_URL_STORAGE_DURATION } from '../../../constants';
 
 export class Url extends Model {
   id!: string;

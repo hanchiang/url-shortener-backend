@@ -5,4 +5,10 @@ export interface UrlShortenerService {
    * @param alias
    */
   shortenUrl(url: string, alias?: string): Promise<string>;
+
+  /**
+   * @returns The original url
+   * @param urlKey
+   */
+  getOriginalUrl(urlKey: string): Promise<string>;
 }
