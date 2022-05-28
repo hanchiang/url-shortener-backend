@@ -4,15 +4,16 @@ import { KeyGeneration } from '../keyGeneration';
 import config from '../../config';
 import { throwError, ErrorCode } from '../../utils/error';
 import { urlSafe } from '../../utils/urlSafe';
-import { MemoryStore } from '../../db/redis';
+import { MemoryStore, Redis } from '../../db/redis';
 import { UrlDao, UrlDaoImpl } from '../../db/postgres/dao/urlDao';
 
 export class UrlShortenerServiceImpl implements UrlShortenerService {
   private keyGenerationService: KeyGeneration;
   private urlDao: UrlDao;
+  private redis: MemoryStore;
 
-  constructor(private redis: MemoryStore) {
-    // TODO:
+  constructor() {
+    this.redis = Redis.getInstance();
     this.keyGenerationService = new KeyGenerationServiceImpl();
     this.urlDao = new UrlDaoImpl();
   }
