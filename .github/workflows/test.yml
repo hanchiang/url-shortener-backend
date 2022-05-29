@@ -1,0 +1,12 @@
+name: Test workflow
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run tests with docker compose
+        run: |
+          ./docker-compose.sh build test
+          ./docker-compose.sh up test --exit-code-from backend
+          ./docker-compose.sh down test
