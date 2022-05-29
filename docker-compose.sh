@@ -1,3 +1,5 @@
+#!/bin/bash
+
 all_args=($@)
 command=$1
 env=$2

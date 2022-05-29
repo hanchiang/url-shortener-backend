@@ -6,4 +6,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Run tests with docker compose
-        run: ./docker-compose.sh up test
+        run: |
+          ./docker-compose.sh build test
+          ./docker-compose.sh up test --no-start
+          ./docker-compose.sh start test postgres redis
+          ./docker-compose.sh start test backend
+          ./docker-compose.sh down test
+          exit_code=$(docker ps -aq --filter status=exited | xargs docker inspect -f '{{ .Name }} {{ .State.ExitCode }}' | grep backend | cut -d ' ' -f 2)
+          exit $exit_code
