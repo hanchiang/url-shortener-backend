@@ -8,16 +8,5 @@ jobs:
       - name: Run tests with docker compose
         run: |
           ./docker-compose.sh build test
-          ./docker-compose.sh up test --no-start
-          ./docker-compose.sh start test postgres redis
-          ./docker-compose.sh start test backend
+          ./docker-compose.sh up test --exit-code-from backend
           ./docker-compose.sh down test
-          exit_code=$(docker ps -aq --filter status=exited \
-              | xargs docker inspect -f '{{ .Name }} {{ .State.ExitCode }}' \
-              | grep backend \
-              | cut -d ' ' -f 2)
-          if [ $exit_code -eq "0" ]
-            then echo "Tests ran successfully"
-            else echo "Tests did not run successfully"
-          fi
-          exit $exit_code
