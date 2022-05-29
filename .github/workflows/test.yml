@@ -10,31 +10,4 @@ jobs:
           ./docker-compose.sh build test
           ./docker-compose.sh up test --exit-code-from backend
           ./docker-compose.sh down test
-  build_and_push_image:
-    runs-on: ubuntu-latest
-    env:
-      APP_NAME: url_shortener
-      IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
-      REGISTRY_USER: ${{ github.actor }}
-      REGISTRY_PASSWORD: ${{ secrets.DOCKER_BUILD_DEPLOY_TOKEN }}
-    steps:
-      - uses: actions/checkout@v3
-      - name: Build docker image
-        id: build_image
-        run: docker build -t "$IMAGE_REGISTRY/$APP_NAME:$GITHUB_SHA" .
-      # - name: Log in to github container registry
-      #   id: login_container_registry
-      #   uses: redhat-actions/podman-login@v1
-      #   with:
-      #     username: ${{ env.REGISTRY_USER }}
-      #     password: ${{ env.REGISTRY_PASSWORD }}
-      #     registry: ${{ env.IMAGE_REGISTRY }}
-      - name: Log in to github container registry
-        run: echo $REGISTRY_PASSWORD | docker login ghcr.io -u $REGISTRY_USER --password-stdin
-      - name: Push to registry
-        id: push_image
-        run: docker push "$IMAGE_REGISTRY/$APP_NAME:$GITHUB_SHA"
-      - name: Echo outputs
-        run: |
-          echo "${{ toJSON(steps.push_image.outputs) }}"
       
