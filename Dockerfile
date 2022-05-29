@@ -24,7 +24,6 @@ ENV PATH /opt/node_app/node_modules/.bin:$PATH
 # copy in our source code last, as it changes the most
 COPY --chown=node:node . .
 RUN npm run build
-USER node
 CMD [ "npm", "run", "debug" ]
 
 
@@ -32,7 +31,6 @@ CMD [ "npm", "run", "debug" ]
 FROM dev as test
 ENV NODE_ENV test
 ENV PORT 3000
-USER node
 CMD ["npm", "test"]
 
 # 4. --- Release ---
