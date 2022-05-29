@@ -2,14 +2,19 @@ version: '3.4'
 
 services:
   backend:
+    build:
+      context: .
+      target: test
+      dockerfile: Dockerfile
+    image: url-shortener:test
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=test
       - POSTGRES_HOST=postgres
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
-      - POSTGRES_DB=url-shortener
+      - POSTGRES_DB=url_shortener_test
       - POSTGRES_PORT=5432
-      - REDIS_URL=redis://redis:6379/0
+      - REDIS_URL=redis://redis:6379/1
       - BASE_DOMAIN=http://localhost:3000
     ports:
       - "3000:3000"
@@ -21,7 +26,7 @@ services:
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
-      - POSTGRES_DB=url-shortener
+      - POSTGRES_DB=url_shortener_test
     ports:
       - "5432:5432"
 

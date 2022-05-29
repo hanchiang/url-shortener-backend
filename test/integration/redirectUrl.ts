@@ -16,9 +16,13 @@ describe('Redirect Url integration test', () => {
   });
 
   afterEach(async () => {
-    return new Promise((resolve) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      server.close(resolve as any);
+    return new Promise((resolve, reject) => {
+      server.close((err) => {
+        if (err) {
+          reject(err);
+        }
+        resolve();
+      });
     });
   });
 

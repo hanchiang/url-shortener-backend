@@ -2,17 +2,14 @@ version: '3.4'
 
 services:
   backend:
-    build:
-      context: .
-      target: dependencies
-      dockerfile: Dockerfile
-    image: url-shortener:dev
-    command: npm run debug
     volumes:
       - ./:/opt/node_app
       - ./package.json:/opt/node_app/package.json
       - ./package-lock.json:/opt/node_app/package-lock.json
       - /opt/node_app/node_modules
+    depends_on:
+      - postgres
+      - redis
 
   postgres:
     image: postgres:13.1

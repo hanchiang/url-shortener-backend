@@ -6,22 +6,22 @@ import config from '../config';
 import dbConfig from '../knexfile';
 
 const getDbConfig = (env: string) => dbConfig[env];
+
+let knex: Knex;
+
 export const initDb = () => {
-  const knex = Knex(getKnexOptions());
+  knex = Knex(getKnexOptions());
   Model.knex(knex);
   Redis.getInstance();
 };
 
 export const closeDb = async () => {
-  // TODO: some connection does not close
-  const knex = Knex(getKnexOptions());
   await flushDb();
   await knex.destroy();
   await Redis.close();
 };
 
 export const flushDb = async () => {
-  const knex = Knex(getKnexOptions());
   await knex('url').del();
   await Redis.flush();
 };

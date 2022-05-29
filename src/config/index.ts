@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === 'test') {
 const config = {
   nodeEnv: process.env.NODE_ENV || 'development',
   postgresHost: process.env.POSTGRES_HOST || 'localhost',
-  postgresDb: process.env.POSTGRES_DB || 'url-shortener',
+  postgresDb: process.env.POSTGRES_DB || 'url_shortener',
   postgresUser: process.env.POSTGRES_USER || 'root',
   postgresPassword: process.env.POSTGRES_PASSWORD || 'root',
   postgresPort: parseInt(process.env.POSTGRES_PORT) || 5432,

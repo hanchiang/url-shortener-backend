@@ -1,7 +1,9 @@
+import { expect } from 'chai';
 import Sinon from 'sinon';
 
 import { UrlShortenerServiceImpl } from '../../../src/services/impl/urlShortener';
 import { UrlDaoImpl } from '../../../src/db/postgres/dao/urlDao';
+import { Redis } from '../../../src/db/redis';
 
 describe('UrlShortenerService unit tests', () => {
   afterEach(() => {
@@ -11,14 +13,16 @@ describe('UrlShortenerService unit tests', () => {
   it('Should shorten url with alias if it does not already exist', async () => {
     const url = 'www.google.com';
     const alias = 'abc';
-    const urlShortenerService = new UrlShortenerServiceImpl();
 
     Sinon.stub(
-      urlShortenerService,
+      UrlShortenerServiceImpl.prototype,
       'ensureAliasDoesNotExist' as any
     ).resolves();
     Sinon.stub(UrlDaoImpl.prototype, 'insert').resolves();
+    Sinon.stub(Redis, 'getInstance' as any).resolves();
 
-    await urlShortenerService.shortenUrl(url, alias);
+    const urlShortenerService = new UrlShortenerServiceImpl();
+    const shortenedUrl = await urlShortenerService.shortenUrl(url, alias);
+    expect(shortenedUrl).to.eq(`http://localhost:3000/${alias}`);
   });
 });

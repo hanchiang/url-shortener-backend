@@ -54,8 +54,11 @@ export class Redis implements MemoryStore {
   }
 
   public static close(): Promise<void> {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       this.instance.conn.quit((err, data) => {
+        if (err) {
+          reject(err);
+        }
         this.instance.conn = null;
         this.instance = null;
         resolve();

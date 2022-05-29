@@ -1,0 +1,36 @@
+version: '3.4'
+
+services:
+  backend:
+    build:
+      context: .
+      target: dev
+      dockerfile: Dockerfile
+    image: url-shortener:dev
+    command: npm run debug
+    environment:
+      - NODE_ENV=development
+      - POSTGRES_HOST=postgres
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=url_shortener
+      - POSTGRES_PORT=5432
+      - REDIS_URL=redis://redis:6379/0
+      - BASE_DOMAIN=http://localhost:3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+      - redis
+
+  postgres:
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=url_shortener
+    ports:
+      - "5432:5432"
+
+  redis:
+    ports:
+      - "6379:6379"
