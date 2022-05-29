@@ -34,8 +34,9 @@ Some examples are [bit.ly](https://bitly.com/) and [tinyurl.com](https://tinyurl
 * `loadtest/`: Test the performance of the APIs
 
 # Run with docker compose
-* Start: `docker-compose up -d`
-* Stop: `docker-compose down`
+* Usage: `./docker-compose.sh <command> <environment> [<args>]`
+* Create and run containers: `./docker-compose.sh <command> <environment> [<args>]`, e.g. `./docker-compose.sh up dev -d`
+* Stop and remove containers: `./docker-compose.sh down dev -d`
 
 # Run without docker compose
 * Create `.env` file from `.env.sample`, filling in the missing details
