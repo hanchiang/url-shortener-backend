@@ -10,3 +10,30 @@ jobs:
           ./docker-compose.sh build test
           ./docker-compose.sh up test --exit-code-from backend
           ./docker-compose.sh down test
+
+name: Build workflow
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build_and_push_image:
+    runs-on:
+    env:
+      APP_NAME: url_shortener
+      IMAGE_NAME: $APP_NAME:$GITHUB_SHA
+      IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
+      REGISTRY_USER: ${{ github.actor }}
+      REGISTRY_PASSWORD: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build docker image
+        id: build-image
+        run: docker build -t $IMAGE_NAME .
+      - name: Login to registry
+        id: login-registry
+        run: echo $DOCKER_BUILD_DEPLOY_TOKEN | docker login ghcr.io -u hanchiang --password-stdin
+      - name: Push to registry
+        id: push-image
+        run: docker push $IMAGAE_REGISTRY/$IMAGE_NAME
+      
