@@ -2,9 +2,6 @@
 
 -- DROP TABLE public.url;
 
-DROP DATABASE IF EXISTS url_shortener_test;
-CREATE DATABASE url_shortener_test;
-
 CREATE TABLE public.url
 (
     id character varying(16) COLLATE pg_catalog."default" NOT NULL,
