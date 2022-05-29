@@ -1,3 +1,4 @@
+import { expect } from 'chai';
 import Sinon from 'sinon';
 
 import { UrlShortenerServiceImpl } from '../../../src/services/impl/urlShortener';
@@ -21,6 +22,7 @@ describe('UrlShortenerService unit tests', () => {
     Sinon.stub(Redis, 'getInstance' as any).resolves();
 
     const urlShortenerService = new UrlShortenerServiceImpl();
-    await urlShortenerService.shortenUrl(url, alias);
+    const shortenedUrl = await urlShortenerService.shortenUrl(url, alias);
+    expect(shortenedUrl).to.eq(`http://localhost:3000/${alias}`);
   });
 });
