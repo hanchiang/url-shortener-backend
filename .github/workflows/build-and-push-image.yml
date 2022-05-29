@@ -5,22 +5,22 @@ on:
       - master
 jobs:
   build_and_push_image:
-    runs-on:
+    runs-on: ubuntu-latest
     env:
       APP_NAME: url_shortener
-      IMAGE_NAME: $APP_NAME:$GITHUB_SHA
-      IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
-      REGISTRY_USER: ${{ github.actor }}
-      REGISTRY_PASSWORD: ${{ github.token }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Export environment variables
+        run: |
+          export IMAGE_NAME="$APP_NAME:$GITHUB_SHA"
+          export IMAGE_REGISTRY="ghcr.io/${{ github.repository_owner }}"
+          export IMAGE_ID="$IMAGE_REGISTRY/$IMAGE_NAME"
       - name: Build docker image
         id: build-image
         run: docker build -t $IMAGE_NAME .
       - name: Login to registry
         id: login-registry
-        run: echo $DOCKER_BUILD_DEPLOY_TOKEN | docker login ghcr.io -u hanchiang --password-stdin
+        run: echo $DOCKER_BUILD_DEPLOY_TOKEN | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
       - name: Push to registry
         id: push-image
-        run: docker push $IMAGAE_REGISTRY/$IMAGE_NAME
+        run: docker push $IMAGE_ID
       
