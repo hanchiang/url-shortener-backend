@@ -6,6 +6,7 @@ import { throwError, ErrorCode } from '../../utils/error';
 import { urlSafe } from '../../utils/urlSafe';
 import { MemoryStore, Redis } from '../../db/redis';
 import { UrlDao, UrlDaoImpl } from '../../db/postgres/dao/urlDao';
+import logger from '../../utils/logger';
 
 export class UrlShortenerServiceImpl implements UrlShortenerService {
   private keyGenerationService: KeyGeneration;
@@ -30,6 +31,10 @@ export class UrlShortenerServiceImpl implements UrlShortenerService {
       key = await this.getAvailableKey();
     }
 
+    logger.info(
+      `Shorten URL ${originalUrl}, ${alias ? `alias ${alias}` : ''}, key ${key}`
+    );
+
     await this.urlDao.insert(key, originalUrl);
     return this.constructShortenedUrl(key);
   }
@@ -38,9 +43,13 @@ export class UrlShortenerServiceImpl implements UrlShortenerService {
     const cachedData = await this.redis.getString(urlKey);
     // TODO: Test. Log cache hit or miss
     if (cachedData) {
+      logger.info(`Found short URL ${urlKey} from cache`);
       return cachedData;
     }
 
+    logger.info(
+      `Did not find short URL ${urlKey} from cache. Searching in database.`
+    );
     const urlInDb = await this.urlDao.findById(urlKey);
     if (!urlInDb) {
       throwError({
@@ -65,6 +74,7 @@ export class UrlShortenerServiceImpl implements UrlShortenerService {
   private async getAvailableKey(): Promise<string> {
     let result;
     let foundAvailableKey = false;
+    let iterations = 0;
     do {
       const generatedKeys = this.keyGenerationService.generate();
       const urlsInDb = await this.urlDao.findByIds(generatedKeys);
@@ -79,7 +89,13 @@ export class UrlShortenerServiceImpl implements UrlShortenerService {
           break;
         }
       }
+      iterations++;
     } while (!foundAvailableKey);
+    logger.info(
+      `Found an available key in ${iterations} ${
+        iterations > 1 ? 'iterations' : 'iteration'
+      }`
+    );
     return result;
   }
 
