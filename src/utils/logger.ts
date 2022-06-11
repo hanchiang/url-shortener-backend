@@ -8,7 +8,6 @@ const options: winston.LoggerOptions = {
       stderrLevels: ['error'],
       consoleWarnLevels: ['warn'],
     }),
-    new winston.transports.File({ filename: 'debug.log', level: 'debug' }),
   ],
   silent: process.env.NODE_ENV === 'test',
 };

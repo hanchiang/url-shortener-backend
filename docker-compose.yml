@@ -14,7 +14,6 @@ services:
   postgres:
     image: postgres:13.1
     volumes:
-      - postgres-volume:/var/lib/postgresql/data
       - ./src/db/postgres/schema.sql:/docker-entrypoint-initdb.d/schema.sql
   
   redis:

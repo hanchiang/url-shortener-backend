@@ -33,7 +33,7 @@
     "test": "npm run test-unit && npm run test-integration",
     "test-integration": "nyc ts-mocha test/dbhelper.ts test/integration/index.ts",
     "test-unit": "nyc ts-mocha test/unit/index.ts",
-    "build-ts": "tsc",
+    "build-ts": "tsc -p .",
     "watch-ts": "tsc -w",
     "prettier:fix": "prettier --write \"**/*.+(ts|js|json)\"",
     "prettier:check": "prettier --check \"**/*.+(ts|js|json)\"",
@@ -51,6 +51,7 @@
   "dependencies": {
     "bluebird": "^3.7.2",
     "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-joi-validation": "^5.0.0",
