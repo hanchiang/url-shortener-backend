@@ -7,7 +7,7 @@ services:
       target: test
       dockerfile: Dockerfile
     image: url-shortener:test
-    command: npm test
+    command: npm run test:ci
     environment:
       - NODE_ENV=test
       - POSTGRES_HOST=postgres

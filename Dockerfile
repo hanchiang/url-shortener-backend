@@ -19,16 +19,19 @@ ENV PATH /opt/node_app/node_modules/.bin:$PATH
 
 # copy in our source code last, as it changes the most
 COPY --chown=node:node . .
-RUN npm run build
 USER node
+RUN npm run build
 CMD [ "npm", "run", "debug" ]
 
 
 # --- test ---
-FROM dev as test
+FROM base as test
 ENV NODE_ENV test
 ENV PORT 3000
-CMD ["npm", "test"]
+RUN npm ci
+ENV PATH /opt/node_app/node_modules/.bin:$PATH
+USER node
+CMD ["npm", "run", "test:ci"]
 
 # --- Release ---
 FROM base AS release
@@ -38,4 +41,5 @@ ENV PATH /opt/node_app/node_modules/.bin:$PATH
 
 COPY --from=dev /opt/node_app/dist ./dist
 RUN npm ci --only=production
+USER node
 CMD [ "npm", "run", "start" ]
