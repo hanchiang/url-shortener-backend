@@ -6,3 +6,11 @@ dist
 node_modules
 npm-debug.log
 README.md
+loadtest
+coverage
+.nyc_output
+.github
+images
+.env
+.env.test
+debug.log

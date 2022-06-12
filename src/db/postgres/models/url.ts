@@ -22,6 +22,9 @@ export class Url extends Model {
     this.expireAt = new Date(now.getTime() + MAX_URL_STORAGE_DURATION);
   }
 
+  // delete expired url
+  // https://vincit.github.io/objection.js/api/model/instance-methods.html#afterfind
+
   static get jsonSchema() {
     return {
       type: 'object',
