@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - feature/deployment
 jobs:
   build_and_push_image:
     runs-on: ubuntu-latest
@@ -25,4 +26,8 @@ jobs:
       - name: Echo outputs
         run: |
           echo "${{ toJSON(steps.push_image.outputs) }}"
+      - name: SSH into EC2, pull image from docker registry, run container
+        id: deploy
+        run: |
+          echo "sssssshhh.... ${{ secrets.SSH_KEY }}"
       
