@@ -28,7 +28,7 @@ ENV PATH /opt/node_app/node_modules/.bin:$PATH
 
 COPY --chown=node:node . .
 USER node
-# TODO: Permission denied when nyc tries to create .nyc_output/
+# TODO: Permission denied when nyc tries to create .nyc_output/ 
 CMD ["npm", "run", "test:ci"]
 
 ## --- Build ---
