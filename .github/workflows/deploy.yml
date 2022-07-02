@@ -1,4 +1,4 @@
-name: Deploy
+name: Build and deploy
 on:
   workflow_run:
     workflows: [Test and build]
@@ -7,9 +7,31 @@ on:
     branches:
       - master
 jobs:
-  build_and_push_image:
+  build_and_upload:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    env:
+      APP_NAME: url_shortener
+      IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
+      REGISTRY_USER: ${{ github.actor }}
+      DOCKER_BUILD_PUSH_PASSWORD: ${{ secrets.DOCKER_BUILD_DEPLOY_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build docker image
+        id: build_image
+        run: docker build -t "$IMAGE_REGISTRY/$APP_NAME:$GITHUB_SHA" --target release .
+      - name: Log in to github container registry
+        id: login_registry
+        run: echo $DOCKER_BUILD_PUSH_PASSWORD | docker login ghcr.io -u $REGISTRY_USER --password-stdin
+      - name: Push to registry
+        id: push_image
+        run: docker push "$IMAGE_REGISTRY/$APP_NAME:$GITHUB_SHA"
+      - name: Echo outputs
+        run: |
+          echo "${{ toJSON(steps.push_image.outputs) }}"
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [build]
     env:
       APP_NAME: url_shortener
       IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}

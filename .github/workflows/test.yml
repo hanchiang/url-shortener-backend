@@ -14,7 +14,7 @@ jobs:
           ./docker-compose.sh test build 
           ./docker-compose.sh test up --exit-code-from backend
           ./docker-compose.sh test down
-  build_image:
+  build:
     runs-on: ubuntu-latest
     needs: [test]
     if: ${{ success() }}
@@ -28,12 +28,3 @@ jobs:
       - name: Build docker image
         id: build_image
         run: docker build -t "$IMAGE_REGISTRY/$APP_NAME:$GITHUB_SHA" --target release .
-      - name: Log in to github container registry
-        id: login_registry
-        run: echo $DOCKER_BUILD_PUSH_PASSWORD | docker login ghcr.io -u $REGISTRY_USER --password-stdin
-      - name: Push to registry
-        id: push_image
-        run: docker push "$IMAGE_REGISTRY/$APP_NAME:$GITHUB_SHA"
-      - name: Echo outputs
-        run: |
-          echo "${{ toJSON(steps.push_image.outputs) }}"
