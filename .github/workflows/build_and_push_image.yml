@@ -1,17 +1,31 @@
-name: Build and push image workflow
+name: CICD
 on:
   push:
     branches:
       - master
       - feature/deployment
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run tests with docker compose
+        run: |
+          ./docker-compose.sh build test
+          ./docker-compose.sh up test --exit-code-from backend
+          ./docker-compose.sh down test
   build_and_push_image:
     runs-on: ubuntu-latest
+    needs: [test]
     env:
       APP_NAME: url_shortener
       IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
       REGISTRY_USER: ${{ github.actor }}
-      REGISTRY_PASSWORD: ${{ secrets.DOCKER_BUILD_DEPLOY_TOKEN }}
+      DOCKER_BUILD_PUSH_PASSWORD: ${{ secrets.DOCKER_BUILD_DEPLOY_TOKEN }}
+      DOCKER_PULL_PASSWORD: ${{ secrets.DOCKER_PULL_TOKEN }}
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      SSH_USER: ${{ secrets.SSH_USER }}
+      SSH_HOST: ${{ secrets.SSH_HOST }}
     steps:
       - uses: actions/checkout@v3
       - name: Build docker image
@@ -19,15 +33,54 @@ jobs:
         run: docker build -t "$IMAGE_REGISTRY/$APP_NAME:$GITHUB_SHA" --target release .
       - name: Log in to github container registry
         id: login_registry
-        run: echo $REGISTRY_PASSWORD | docker login ghcr.io -u $REGISTRY_USER --password-stdin
+        run: echo $DOCKER_BUILD_PUSH_PASSWORD | docker login ghcr.io -u $REGISTRY_USER --password-stdin
       - name: Push to registry
         id: push_image
         run: docker push "$IMAGE_REGISTRY/$APP_NAME:$GITHUB_SHA"
       - name: Echo outputs
         run: |
           echo "${{ toJSON(steps.push_image.outputs) }}"
-      - name: SSH into EC2, pull image from docker registry, run container
-        id: deploy
+      - name: Configure SSH
+        id: ssh
         run: |
-          echo "sssssshhh.... ${{ secrets.SSH_KEY }}"
+          mkdir -p ~/.ssh/
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/url_shortener_rsa
+          chmod 600 ~/.ssh/url_shortener_rsa
+          cat << EOF >> ~/.ssh/config
+          Host production
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/url_shortener_rsa
+            StrictHostKeyChecking no
+          EOF
+      - name: SSH into server, pull image, run container
+        id: deploy
+        env:
+          NODE_ENV: production
+          POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          REDIS_URL: ${{ secrets.REDIS_URL }}
+          BASE_DOMAIN: http://localhost:3000
+        run: |
+          ssh production << EOF
+          echo "Logging into container registry"
+          echo $DOCKER_PULL_PASSWORD | docker login ghcr.io -u $REGISTRY_USER --password-stdin
+
+          echo "Pulling image"
+          docker pull "$IMAGE_REGISTRY/$APP_NAME:$GITHUB_SHA"
+
+          echo "Stopping existing container"
+          docker stop url_shortener && docker rm url_shortener
+
+          echo "Starting new container"
+          docker run --name url_shortener -e NODE_ENV=$NODE_ENV -e POSTGRES_HOST=$POSTGRES_HOST \
+          -e POSTGRES_USER=$POSTGRES_USER -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -e POSTGRES_DB=$POSTGRES_DB \
+          -e REDIS_URL=$REDIS_URL -e BASE_DOMAIN=$BASE_DOMAIN -d "$IMAGE_REGISTRY/$APP_NAME:$GITHUB_SHA"
+
+          sleep 5
+          docker ps
+          EOF
+
       

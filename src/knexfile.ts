@@ -37,5 +37,22 @@ export default {
       tableName: 'knex_migrations',
     },
   },
+  production: {
+    client: 'postgres',
+    useNullAsDefault: true,
+    connection: {
+      host: config.postgresHost,
+      user: config.postgresUser,
+      password: config.postgresPassword,
+      database: config.postgresDb,
+    },
+    pool: {
+      min: 1,
+      max: 5,
+    },
+    migrations: {
+      tableName: 'knex_migrations',
+    },
+  },
   ...knexSnakeCaseMappers(),
 };
