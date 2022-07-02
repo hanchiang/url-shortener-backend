@@ -48,9 +48,11 @@ jobs:
           mkdir -p ~/.ssh/
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/url_shortener_rsa
           chmod 600 ~/.ssh/url_shortener_rsa
+          SSH_HOST_IP=$(nslookup $SSH_HOST | tail -n 2 | head -n 1 | cut -d ' ' -f 2)
+          echo "server ip: $SSH_HOST_IP"
           cat << EOF >> ~/.ssh/config
           Host production
-            HostName $SSH_HOST
+            HostName $SSH_HOST_IP
             User $SSH_USER
             IdentityFile ~/.ssh/url_shortener_rsa
             StrictHostKeyChecking no
@@ -77,7 +79,7 @@ jobs:
           docker stop url_shortener && docker rm url_shortener
 
           echo "Starting new container"
-          docker run --name url_shortener --network host -e NODE_ENV=$NODE_ENV -e POSTGRES_HOST=$POSTGRES_HOST \
+          docker run --name url_shortener -p 3000:3000 --network host -e NODE_ENV=$NODE_ENV -e POSTGRES_HOST=$POSTGRES_HOST \
           -e POSTGRES_USER=$POSTGRES_USER -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -e POSTGRES_DB=$POSTGRES_DB \
           -e REDIS_URL=$REDIS_URL -e BASE_DOMAIN=$BASE_DOMAIN -d "$IMAGE_REGISTRY/$APP_NAME:$GITHUB_SHA"
 
