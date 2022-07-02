@@ -159,3 +159,4 @@ Each key contains 6 characters.
 * Handle expired keys
 * Collect metric
 * Centralised log collection
+* Health check: app, database
