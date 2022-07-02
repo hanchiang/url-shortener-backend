@@ -31,7 +31,7 @@ jobs:
           echo "${{ toJSON(steps.push_image.outputs) }}"
   deploy:
     runs-on: ubuntu-latest
-    needs: [build]
+    needs: [build_and_upload]
     env:
       APP_NAME: url_shortener
       IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
