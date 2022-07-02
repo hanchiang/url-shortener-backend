@@ -1,8 +1,8 @@
 #!/bin/bash
 
 all_args=($@)
-command=$1
-env=$2
+env=$1
+command=$2
 rest_args=${all_args[@]:2}
 
 dir=$(dirname $0)
