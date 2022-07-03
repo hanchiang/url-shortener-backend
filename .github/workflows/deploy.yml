@@ -67,7 +67,7 @@ jobs:
           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
           REDIS_URL: ${{ secrets.REDIS_URL }}
           ALLOWED_ORIGINS: ${{ secrets.ALLOWED_ORIGINS }}
-          BASE_DOMAIN: http://localhost:3000
+          BASE_DOMAIN: ${{ secrets.BASE_DOMAIN }}
         run: |
           ssh production << EOF
           echo "Logging into container registry"
