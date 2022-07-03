@@ -8,6 +8,7 @@ import cors from 'cors';
 import { initDb } from './db';
 import routes from './routes';
 import * as middlewares from './middlewares';
+import logger from './utils/logger';
 
 initDb();
 
@@ -18,7 +19,17 @@ const app = express();
 app.set('port', process.env.PORT || 3000);
 app.use(
   cors({
-    origin: process.env.ALLOWED_ORIGIN || 'http://localhost:8080',
+    origin: (origin, cb) => {
+      const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',');
+      if (allowedOrigins.includes(origin)) {
+        cb(null, origin);
+      } else {
+        logger.warn(
+          `Unauthorised accessed from origin: ${origin}. Allowed origins: ${allowedOrigins}`
+        );
+        cb('error', null);
+      }
+    },
   })
 );
 app.use(bodyParser.json());

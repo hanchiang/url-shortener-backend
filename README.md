@@ -160,3 +160,4 @@ Each key contains 6 characters.
 * Collect metric
 * Centralised log collection
 * Health check: app, database
+* container image scan
