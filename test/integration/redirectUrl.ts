@@ -5,6 +5,7 @@ import request from 'supertest';
 import app from '../../src/app';
 import config from '../config';
 import { ErrorCode } from '../../src/utils/error';
+import { sendRequest } from './utils/sendRequest';
 
 let server: Server;
 
@@ -28,7 +29,7 @@ describe('Redirect Url integration test', () => {
 
   it('should throw error if url key does not exist', async () => {
     const urlKey = 'unknown';
-    const res = await request(server).get(`/${urlKey}`);
+    const res = await sendRequest(server, 'get', `/${urlKey}`);
     expect(res.status).to.equal(ErrorCode.NOT_FOUND);
     expect(res.body.error.message).to.equal(`/${urlKey} does not exist`);
   });
@@ -36,9 +37,9 @@ describe('Redirect Url integration test', () => {
   it('should redirect if url key exist', async () => {
     const url = 'https://www.google.com';
     const alias = 'tothemoon';
-    let res = await request(server).post('/urls').send({ url, alias });
+    let res = await sendRequest(server, 'post', '/urls', { url, alias });
 
-    res = await request(server).get(`/${alias}`);
+    res = await sendRequest(server, 'get', `/${alias}`);
     expect(res.status).to.equal(302);
     expect(res.header.location).to.equal(url);
   });

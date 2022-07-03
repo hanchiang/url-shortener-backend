@@ -74,7 +74,7 @@ export const errorHandler = (
     } else {
       err = err as CustomError;
       status = status || err.status || 500;
-      message = message || err.message || 'An error occurred';
+      message = message || err.message || err || 'An error occurred';
       stack = err.stack;
     }
   }

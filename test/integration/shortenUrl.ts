@@ -6,6 +6,7 @@ import faker from 'faker';
 import app from '../../src/app';
 import config from '../config';
 import { ErrorCode } from '../../src/utils/error';
+import { sendRequest } from './utils/sendRequest';
 
 let server: Server;
 
@@ -30,7 +31,7 @@ describe('Shorten Url integration test', () => {
   it('Should shorten url', async () => {
     const url = 'https://www.google.com';
     const alias = 'myalias';
-    const res = await request(server).post('/urls').send({ url, alias });
+    const res = await sendRequest(server, 'post', '/urls', { url, alias });
     expect(res.status).to.equal(200);
     expect(res.body.payload.endsWith(alias));
   });
@@ -38,17 +39,17 @@ describe('Shorten Url integration test', () => {
   it('Should throw error if alias is taken', async () => {
     const url = 'https://www.google.com';
     const alias = 'myalias';
-    let res = await request(server).post('/urls').send({ url, alias });
+    let res = await sendRequest(server, 'post', '/urls', { url, alias });
     expect(res.status).to.equal(200);
 
-    res = await request(server).post('/urls').send({ url, alias });
+    res = await sendRequest(server, 'post', '/urls', { url, alias });
     expect(res.status).to.equal(ErrorCode.CONFLICT);
   });
 
   it('Should throw error if alias is too long', async () => {
     const url = 'https://www.google.com';
     const alias = faker.lorem.words(50);
-    const res = await request(server).post('/urls').send({ url, alias });
+    const res = await sendRequest(server, 'post', '/urls', { url, alias });
 
     expect(res.status).to.equal(400);
   });
@@ -57,8 +58,8 @@ describe('Shorten Url integration test', () => {
     const url = 'https://www.google.com';
     const alias = 'abc';
 
-    let res = await request(server).post('/urls').send({ url, alias });
-    res = await request(server).post('/urls').send({ url, alias });
+    let res = await sendRequest(server, 'post', '/urls', { url, alias });
+    res = await sendRequest(server, 'post', '/urls', { url, alias });
     expect(res.status).to.equal(ErrorCode.CONFLICT);
     expect(res.body.error.message).equal(
       `Alias ${alias} is already taken. Please use another alias`
