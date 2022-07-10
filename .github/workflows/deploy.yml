@@ -49,10 +49,10 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/url_shortener_rsa
           chmod 600 ~/.ssh/url_shortener_rsa
           SSH_HOST_IP=$(nslookup $SSH_HOST | tail -n 2 | head -n 1 | cut -d ' ' -f 2)
-          echo "server ip: $SSH_HOST_IP"
+          echo "host ip address: $SSH_HOST_IP"
           cat << EOF >> ~/.ssh/config
           Host production
-            HostName $SSH_HOST_IP
+            HostName $SSH_HOST
             User $SSH_USER
             IdentityFile ~/.ssh/url_shortener_rsa
             StrictHostKeyChecking no
