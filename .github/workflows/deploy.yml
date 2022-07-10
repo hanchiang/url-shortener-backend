@@ -49,7 +49,7 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/url_shortener_rsa
           chmod 600 ~/.ssh/url_shortener_rsa
           SSH_HOST_IP=$(nslookup $SSH_HOST | tail -n 2 | head -n 1 | cut -d ' ' -f 2)
-          echo "host ip address: $SSH_HOST_IP"
+          echo "host name: $SSH_HOST, host ip address: $SSH_HOST_IP"
           cat << EOF >> ~/.ssh/config
           Host production
             HostName $SSH_HOST
