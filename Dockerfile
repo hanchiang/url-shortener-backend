@@ -2,6 +2,8 @@
 FROM node:16-stretch-slim AS base
 
 RUN mkdir -p /opt/node_app && chown -R node:node /opt/node_app
+RUN apt-get update && apt-get -y install curl
+
 WORKDIR /opt/node_app
 COPY ./package*.json ./
 
