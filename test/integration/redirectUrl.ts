@@ -1,6 +1,5 @@
 import { expect } from 'chai';
 import { Server } from 'http';
-import request from 'supertest';
 
 import app from '../../src/app';
 import config from '../config';

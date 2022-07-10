@@ -16,12 +16,12 @@ export const initDb = () => {
 };
 
 export const closeDb = async () => {
-  await flushDb();
+  await clearDb();
   await knex.destroy();
   await Redis.close();
 };
 
-export const flushDb = async () => {
+export const clearDb = async () => {
   await knex('url').del();
   await Redis.flush();
 };

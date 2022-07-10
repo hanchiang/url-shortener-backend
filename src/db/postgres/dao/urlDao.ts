@@ -1,12 +1,17 @@
+import { raw } from 'objection';
 import { Url } from '../models/url';
 
 export interface UrlDao {
+  healthCheck(): Promise<any>;
   insert(id: string, originalUrl: string): Promise<void>;
   findById(id: string): Promise<Url>;
   findByIds(ids: string[]): Promise<Url[]>;
 }
 
 export class UrlDaoImpl implements UrlDao {
+  public async healthCheck(): Promise<any> {
+    return Url.query().select(raw('1'));
+  }
   public async insert(id: string, originalUrl): Promise<void> {
     await Url.query().insert({
       id,
