@@ -6,6 +6,7 @@ import config from '../../config';
 BluebirdPromise.promisifyAll(redis);
 
 export interface MemoryStore {
+  ping(): Promise<any>;
   setString(key: string, value: string, ttl?: number): Promise<void>;
   getString(key: string): Promise<string | null>;
 }
@@ -28,6 +29,10 @@ export class Redis implements MemoryStore {
 
   private static connect(options?: ClientOpts): RedisClient {
     return redis.createClient(options);
+  }
+
+  public async ping(): Promise<any> {
+    return this.conn.ping();
   }
 
   public async setString(

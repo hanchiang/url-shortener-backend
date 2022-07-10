@@ -1,6 +1,5 @@
 import { expect } from 'chai';
 import { Server } from 'http';
-import request from 'supertest';
 import faker from 'faker';
 
 import app from '../../src/app';

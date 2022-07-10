@@ -23,3 +23,15 @@ export interface ShortenUrlSchema extends ValidatedRequestSchema {
     alias?: string;
   };
 }
+
+export const healthCheckValidator = Joi.object({
+  postgres: Joi.string().min(0),
+  redis: Joi.string().min(0),
+});
+
+export interface HealthCheckSchema extends ValidatedRequestSchema {
+  [ContainerTypes.Query]: {
+    postgres?: string;
+    redis?: string;
+  };
+}
