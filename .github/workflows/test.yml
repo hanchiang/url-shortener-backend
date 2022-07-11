@@ -4,6 +4,9 @@ on:
     branches:
       - feature/*
       - master
+env:
+  APP_NAME: url_shortener
+  IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -17,14 +20,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     needs: [test]
-    if: ${{ success() }}
-    env:
-      APP_NAME: url_shortener
-      IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
-      REGISTRY_USER: ${{ github.actor }}
-      DOCKER_BUILD_PUSH_PASSWORD: ${{ secrets.DOCKER_BUILD_DEPLOY_TOKEN }}
     steps:
       - uses: actions/checkout@v3
       - name: Build docker image
         id: build_image
         run: docker build -t "$IMAGE_REGISTRY/$APP_NAME:$GITHUB_SHA" --target release .
+  notify_unsuccessful:
+    runs-on: ubuntu-latest
+    needs: [test, build]
+    if: ${{ failure() }}
+    env:
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+    steps:
+      - name: Send slack notification
+        run: |
+          now=$(date +%Y-%m-%dT%H:%M:%S)
+          payload=$(echo "{\"text\":\"URL shortener backend: Test and build failed at <DATE>\"}" | sed "s~<DATE>~$now~")
+          curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK
