@@ -9,7 +9,3 @@ services:
       - /opt/node_app/node_modules
     environment:
       - ALLOWED_ORIGINS=http://localhost:8080,https://staging.urlshortener.yaphc.com
-
-volumes:
-  redis-volume:
-  postgres-volume:
