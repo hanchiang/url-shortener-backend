@@ -50,7 +50,7 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         run: |
           now=$(date +%Y-%m-%dT%H:%M:%S)
-          payload=$(echo "{\"text\":\"URL shortener backend: Health check for $SSH_HOST/healthz failed at <DATE>\"}" | sed "s~<DATE>~$now~")
+          payload=$(echo "{\"text\":\"URL shortener backend: Health check for $SSH_HOST/healthz failed at <DATE>. Workflow: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\"}" | sed "s~<DATE>~$now~")
           curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK
           exit 1
   deploy:
@@ -117,7 +117,7 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         run: |
           now=$(date +%Y-%m-%dT%H:%M:%S)
-          payload=$(echo "{\"text\":\"URL shortener backend: Deployment failed at <DATE>\"}" | sed "s~<DATE>~$now~")
+          payload=$(echo "{\"text\":\"URL shortener backend: Deployment failed at <DATE>. Workflow: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\"}" | sed "s~<DATE>~$now~")
           curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK
   notify_successful:
     runs-on: ubuntu-latest
@@ -128,7 +128,7 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         run: |
           now=$(date +%Y-%m-%dT%H:%M:%S)
-          payload=$(echo "{\"text\":\"URL shortener backend: Deployment succeeded at <DATE>\"}" | sed "s~<DATE>~$now~")
+          payload=$(echo "{\"text\":\"URL shortener backend: Deployment succeeded at <DATE>. Workflow: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\"}" | sed "s~<DATE>~$now~")
           curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK
 
       

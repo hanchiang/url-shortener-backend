@@ -35,5 +35,5 @@ jobs:
       - name: Send slack notification
         run: |
           now=$(date +%Y-%m-%dT%H:%M:%S)
-          payload=$(echo "{\"text\":\"URL shortener backend: Test and build failed at <DATE>\"}" | sed "s~<DATE>~$now~")
+          payload=$(echo "{\"text\":\"URL shortener backend: Test and build failed at <DATE>. Workflow: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\"}" | sed "s~<DATE>~$now~")
           curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK
