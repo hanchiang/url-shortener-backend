@@ -154,11 +154,6 @@ Each key contains 6 characters.
 * Check URL: Check where a shortened URL redirects to
 
 # TODO
-* XSS sanitisation
 * URL shortening: Check if URL is stored in the database. If it is, return the short url
 * Key generation: do not check against the database for existing short urls because there can still be a conflict due to concurrency. Let the database handle the conflict
 * Handle expired keys
-* Collect metric
-* Centralised log collection
-* Health check: app, database
-* container image scan
