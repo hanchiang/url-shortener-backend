@@ -39,7 +39,7 @@ describe('Redirect Url integration test', () => {
     let res = await sendRequest(server, 'post', '/urls', { url, alias });
 
     res = await sendRequest(server, 'get', `/${alias}`);
-    expect(res.status).to.equal(302);
+    expect(res.status).to.equal(307);
     expect(res.header.location).to.equal(url);
   });
 });

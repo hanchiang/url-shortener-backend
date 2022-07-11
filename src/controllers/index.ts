@@ -60,5 +60,5 @@ export const redirectUrl = async (
   const { urlKey } = req.params;
   const shortenUrlService = new UrlShortenerServiceImpl();
   const originalUrl = await shortenUrlService.getOriginalUrl(urlKey);
-  res.redirect(originalUrl);
+  res.redirect(307, originalUrl);
 };
