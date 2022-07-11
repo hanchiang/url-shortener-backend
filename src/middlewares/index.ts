@@ -65,17 +65,31 @@ export const errorHandler = (
   let type;
 
   if ((err as ExpressJoiError)?.error?.isJoi) {
-    message = (err as ExpressJoiError).error.toString();
+    const { _original, details } = (err as ExpressJoiError).error;
+    logger.error(`Joi error.`, { original: _original, details: details });
+
+    const customError = details.find((d) => d.type === 'any.custom');
+    if (customError) {
+      // Don't want to log the entire error message, just the error message that was
+      // from the custom validator
+      const split = customError.message?.split('because');
+      message = split[1].trim();
+    } else {
+      message = details.map((d) => d.message).join(', ');
+    }
+
     status = 400;
   } else {
     const objectionError = formatObjectionError(err);
     if (objectionError) {
       ({ message, status, meta, type } = objectionError);
+      logger.error('Objection error.', { message, status, meta, type });
     } else {
       err = err as CustomError;
       status = status || err.status || 500;
       message = message || err.message || err || 'An error occurred';
       stack = err.stack;
+      logger.error('Application error.', { err, status, message, stack });
     }
   }
 

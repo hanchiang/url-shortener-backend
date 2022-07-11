@@ -6,6 +6,7 @@ import {
   validator,
   shortenUrlValidator,
   healthCheckValidator,
+  redirectUrlValidator,
 } from '../controllers/validators';
 import { corsCheck } from '../utils/cors';
 
@@ -38,6 +39,7 @@ router.post(
 router.get(
   '/:urlKey',
   cors(),
+  validator.params(redirectUrlValidator),
   middlewares.catchErrors(controllers.redirectUrl)
 );
 

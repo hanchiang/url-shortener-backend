@@ -4,7 +4,11 @@ import {
   // Extend from this to define a valid schema type/interface
 } from 'express-joi-validation';
 import { ShortenUrlRequest } from './types';
-import { ShortenUrlSchema, HealthCheckSchema } from '../controllers/validators';
+import {
+  ShortenUrlSchema,
+  HealthCheckSchema,
+  RedirectUrlSchema,
+} from '../controllers/validators';
 import { UrlShortenerServiceImpl } from '../services/impl/urlShortener';
 
 import { UrlDaoImpl } from '../db/postgres/dao/urlDao';
@@ -49,7 +53,10 @@ export const shortenUrl = async (
   res.json(shortenedUrl);
 };
 
-export const redirectUrl = async (req: Request, res: Response) => {
+export const redirectUrl = async (
+  req: ValidatedRequest<RedirectUrlSchema>,
+  res: Response
+) => {
   const { urlKey } = req.params;
   const shortenUrlService = new UrlShortenerServiceImpl();
   const originalUrl = await shortenUrlService.getOriginalUrl(urlKey);
