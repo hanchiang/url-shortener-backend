@@ -29,9 +29,19 @@ jobs:
       - name: Echo outputs
         run: |
           echo "${{ toJSON(steps.push_image.outputs) }}"
+  health_check:
+    needs: [build_and_upload]
+    runs:-on: ubuntu-latest
+    env:
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+    steps:
+      - name: Check whether URL shortener is up
+        id: health_check
+        run: |
+          curl $SSH_HOST/healthz
   deploy:
     runs-on: ubuntu-latest
-    needs: [build_and_upload]
+    needs: [health_check]
     env:
       APP_NAME: url_shortener
       IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
@@ -41,7 +51,7 @@ jobs:
       SSH_USER: ${{ secrets.SSH_USER }}
       SSH_HOST: ${{ secrets.SSH_HOST }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3        
       - name: Configure SSH
         id: ssh
         run: |
