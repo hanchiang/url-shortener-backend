@@ -6,6 +6,7 @@ export interface UrlDao {
   insert(id: string, originalUrl: string): Promise<void>;
   findById(id: string): Promise<Url>;
   findByIds(ids: string[]): Promise<Url[]>;
+  findByOriginalUrl(originalUrl: string): Promise<Url[]>;
 }
 
 export class UrlDaoImpl implements UrlDao {
@@ -25,5 +26,11 @@ export class UrlDaoImpl implements UrlDao {
 
   public async findByIds(ids: string[]): Promise<Url[]> {
     return Url.query().findByIds(ids);
+  }
+
+  public async findByOriginalUrl(originalUrl: string): Promise<Url[]> {
+    return Url.query().where({
+      originalUrl,
+    });
   }
 }
