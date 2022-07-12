@@ -30,7 +30,9 @@ describe('Redirect Url integration test', () => {
     const urlKey = 'unknown';
     const res = await sendRequest(server, 'get', `/${urlKey}`);
     expect(res.status).to.equal(ErrorCode.NOT_FOUND);
-    expect(res.body.error.message).to.equal(`/${urlKey} does not exist`);
+    expect(res.body.error.message).to.equal(
+      `Short URL ${urlKey} does not exist`
+    );
   });
 
   it('should redirect if url key exist', async () => {

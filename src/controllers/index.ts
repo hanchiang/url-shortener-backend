@@ -1,4 +1,5 @@
-import { Request, Response } from 'express';
+import { KeyGenerationServiceImpl } from './../services/impl/keyGeneration';
+import { Response } from 'express';
 import {
   ValidatedRequest,
   // Extend from this to define a valid schema type/interface
@@ -13,6 +14,7 @@ import { UrlShortenerServiceImpl } from '../services/impl/urlShortener';
 
 import { UrlDaoImpl } from '../db/postgres/dao/urlDao';
 import { Redis } from '../db/redis';
+import { throwError, ErrorCode } from '../utils/error';
 import logger from '../utils/logger';
 
 export const healthCheck = async (
@@ -48,7 +50,7 @@ export const shortenUrl = async (
   res: Response
 ) => {
   const { url, alias }: ShortenUrlRequest = req.body;
-  const shortenUrlService = new UrlShortenerServiceImpl();
+  const shortenUrlService = UrlShortenerServiceImpl.defaultImpl();
   const shortenedUrl = await shortenUrlService.shortenUrl(url, alias);
   res.json(shortenedUrl);
 };
@@ -58,7 +60,14 @@ export const redirectUrl = async (
   res: Response
 ) => {
   const { urlKey } = req.params;
-  const shortenUrlService = new UrlShortenerServiceImpl();
+  const shortenUrlService = UrlShortenerServiceImpl.defaultImpl();
   const originalUrl = await shortenUrlService.getOriginalUrl(urlKey);
+
+  if (!originalUrl) {
+    throwError({
+      status: ErrorCode.NOT_FOUND,
+      message: `Short URL ${urlKey} does not exist`,
+    });
+  }
   res.redirect(307, originalUrl);
 };

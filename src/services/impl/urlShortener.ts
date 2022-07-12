@@ -1,4 +1,4 @@
-import { UrlShortenerService } from '../urlShortener';
+import { UrlShortenerService } from './../urlShortener';
 import { KeyGenerationServiceImpl } from './keyGeneration';
 import { KeyGeneration } from '../keyGeneration';
 import config from '../../config';
@@ -13,10 +13,22 @@ export class UrlShortenerServiceImpl implements UrlShortenerService {
   private urlDao: UrlDao;
   private redis: MemoryStore;
 
-  constructor() {
-    this.redis = Redis.getInstance();
-    this.keyGenerationService = new KeyGenerationServiceImpl();
-    this.urlDao = new UrlDaoImpl();
+  constructor(
+    urlDao: UrlDao,
+    keyGenerationService: KeyGeneration,
+    redis: MemoryStore
+  ) {
+    this.redis = redis;
+    this.keyGenerationService = keyGenerationService;
+    this.urlDao = urlDao;
+  }
+
+  public static defaultImpl(): UrlShortenerService {
+    return new UrlShortenerServiceImpl(
+      new UrlDaoImpl(),
+      new KeyGenerationServiceImpl(),
+      Redis.getInstance()
+    );
   }
 
   public async shortenUrl(
@@ -28,6 +40,11 @@ export class UrlShortenerServiceImpl implements UrlShortenerService {
       await this.ensureAliasDoesNotExist(alias);
       key = urlSafe(alias);
     } else {
+      // If key exists, return it, don't store additional records
+      const urlKey = await this.getUrlKeyFromDb(originalUrl);
+      if (urlKey) {
+        return this.constructShortenedUrl(urlKey);
+      }
       key = await this.getAvailableKey();
     }
 
@@ -39,11 +56,28 @@ export class UrlShortenerServiceImpl implements UrlShortenerService {
     return this.constructShortenedUrl(key);
   }
 
+  public async getUrlKeyFromDb(originalUrl: string): Promise<string> {
+    const urls = await this.urlDao.findByOriginalUrl(originalUrl);
+    if (!urls) {
+      logger.info(
+        `Original url ${originalUrl} is not found in database. Returning undefined`
+      );
+      return undefined;
+    }
+    if (urls && urls.length) {
+      const urlKey = urls[0].id;
+      logger.info(
+        `Original url ${originalUrl} is found in database, returning url key ${urlKey}`
+      );
+      return urlKey;
+    }
+  }
+
   public async getOriginalUrl(urlKey: string): Promise<string> {
     const cachedData = await this.redis.getString(urlKey);
     // TODO: Test. Log cache hit or miss
     if (cachedData) {
-      logger.info(`Found short URL ${urlKey} from cache`);
+      logger.info(`Found url key ${urlKey} from cache. Returning original url`);
       return cachedData;
     }
 
@@ -52,11 +86,11 @@ export class UrlShortenerServiceImpl implements UrlShortenerService {
     );
     const urlInDb = await this.urlDao.findById(urlKey);
     if (!urlInDb) {
-      throwError({
-        status: ErrorCode.NOT_FOUND,
-        message: `/${urlKey} does not exist`,
-      });
+      return undefined;
     }
+    logger.info(
+      `Setting url key ${urlKey} and original url ${urlInDb.originalUrl} in cache`
+    );
     await this.redis.setString(urlKey, urlInDb.originalUrl);
     return urlInDb.originalUrl;
   }
