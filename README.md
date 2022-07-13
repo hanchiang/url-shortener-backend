@@ -154,6 +154,8 @@ Each key contains 6 characters.
 * Check URL: Check where a shortened URL redirects to
 
 # TODO
-* URL shortening: Check if URL is stored in the database. If it is, return the short url
+* App should still work if redis is down
+* Use a separate domain for URL redirection: Split this backend into URL shortening and URL redirection
 * Key generation: do not check against the database for existing short urls because there can still be a conflict due to concurrency. Let the database handle the conflict
 * Handle expired keys
+* Use replace mocha and sinon with jest
