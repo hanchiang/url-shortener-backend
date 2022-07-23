@@ -3,7 +3,7 @@ import { Url } from '../models/url';
 
 export interface UrlDao {
   healthCheck(): Promise<any>;
-  insert(id: string, originalUrl: string): Promise<void>;
+  insert(id: string, originalUrl: string, expireAt?: Date): Promise<void>;
   findById(id: string): Promise<Url>;
   findByIds(ids: string[]): Promise<Url[]>;
   findByOriginalUrl(originalUrl: string): Promise<Url[]>;
@@ -13,10 +13,11 @@ export class UrlDaoImpl implements UrlDao {
   public async healthCheck(): Promise<any> {
     return Url.query().select(raw('1'));
   }
-  public async insert(id: string, originalUrl): Promise<void> {
+  public async insert(id: string, originalUrl, expireAt): Promise<void> {
     await Url.query().insert({
       id,
       originalUrl,
+      expireAt,
     });
   }
 

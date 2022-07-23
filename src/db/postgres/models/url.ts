@@ -19,7 +19,10 @@ export class Url extends Model {
   $beforeInsert() {
     const now = new Date();
     this.createdAt = now;
-    this.expireAt = new Date(now.getTime() + MAX_URL_STORAGE_DURATION);
+
+    if (!this.expireAt) {
+      this.expireAt = new Date(now.getTime() + MAX_URL_STORAGE_DURATION);
+    }
   }
 
   // delete expired url

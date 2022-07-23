@@ -9,6 +9,7 @@ import {
 } from 'express-joi-validation';
 import { MAX_ALIAS_LENGTH } from '../constants';
 import { throwError } from '../utils/error';
+import logger from '../utils/logger';
 
 export const validator = createValidator({
   passError: true,
@@ -16,8 +17,8 @@ export const validator = createValidator({
 
 export const xssJoiValidator = (value, helpers) => {
   const sanitised = xss(value);
-  console.log(
-    `sanitised: ${sanitised}, value: ${value}, origina: ${helpers.original}`
+  logger.info(
+    `sanitised: ${sanitised}, value: ${value}, original: ${helpers.original}`
   );
   if (value !== sanitised) {
     throwError({

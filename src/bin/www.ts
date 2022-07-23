@@ -1,11 +1,12 @@
 /* eslint-disable */
 import app from '../app';
+import logger from '../utils/logger';
 
 const port = process.env.PORT || 3000;
 
 /** Listen on provided port, on all network interfaces. */
 const server = app.listen(port, () =>
-  console.log(`Node app is running on port ${port}`)
+  logger.info(`Node app is running on port ${port}`)
 );
 
 // need this in docker container to properly exit since node doesn't handle SIGINT/SIGTERM
@@ -19,7 +20,7 @@ const server = app.listen(port, () =>
 
 // quit on ctrl-c when running docker in terminal
 process.on('SIGINT', () => {
-  console.info(
+  logger.info(
     'Got SIGINT (aka ctrl-c in docker). Graceful shutdown ',
     new Date().toISOString()
   );
@@ -28,7 +29,7 @@ process.on('SIGINT', () => {
 
 // quit properly on docker stop
 process.on('SIGTERM', () => {
-  console.info(
+  logger.info(
     'Got SIGTERM (docker container stop). Graceful shutdown ',
     new Date().toISOString()
   );
@@ -52,7 +53,7 @@ function shutdown() {
 
   server.close((err) => {
     if (err) {
-      console.error(err);
+      logger.error(err);
       process.exitCode = 1;
     }
     process.exit();
@@ -61,7 +62,7 @@ function shutdown() {
 
 function waitForSocketsToClose(counter: number) {
   if (counter > 0) {
-    console.log(
+    logger.info(
       `Waiting ${counter} more ${
         counter === 1 ? 'seconds' : 'second'
       } for all connections to close...`
@@ -69,7 +70,7 @@ function waitForSocketsToClose(counter: number) {
     return setTimeout(waitForSocketsToClose, 1000, counter - 1);
   }
 
-  console.log('Forcing all connections to close now');
+  logger.info('Forcing all connections to close now');
   Object.keys(sockets).forEach((socketId) => {
     sockets[socketId].destroy();
   });
