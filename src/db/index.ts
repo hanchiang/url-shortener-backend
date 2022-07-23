@@ -4,12 +4,16 @@ import { Model } from 'objection';
 import { Redis } from './redis';
 import config from '../config';
 import dbConfig from '../knexfile';
+import util from 'node:util';
+import logger from '../utils/logger';
+const exec = util.promisify(require('node:child_process').exec);
 
 const getDbConfig = (env: string) => dbConfig[env];
 
 let knex: Knex;
 
-export const initDb = () => {
+export const initDb = async () => {
+  await runMigrations();
   knex = Knex(getKnexOptions());
   Model.knex(knex);
   Redis.getInstance();
@@ -28,4 +32,22 @@ export const clearDb = async () => {
 
 const getKnexOptions = () => {
   return knexStringCase(getDbConfig(config.nodeEnv));
+};
+
+export const runMigrations = async () => {
+  const commands = [
+    'knex migrate:list --knexfile ./src/knexfile.ts',
+    'knex migrate:latest --knexfile ./src/knexfile.ts',
+  ];
+
+  for (const command of commands) {
+    logger.info(`Migration command: ${command}`);
+    try {
+      const { stdout, stderr } = await exec(command);
+      logger.info(`stdout: ${stdout}`);
+      logger.info(`stderr:${stderr}`);
+    } catch (e) {
+      logger.error('Encountered error when running migrations: ', { error: e });
+    }
+  }
 };
