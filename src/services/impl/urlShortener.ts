@@ -77,7 +77,9 @@ export class UrlShortenerServiceImpl implements UrlShortenerService {
     const cachedData = await this.redis.getString(urlKey);
     // TODO: Test. Log cache hit or miss
     if (cachedData) {
-      logger.info(`Found url key ${urlKey} from cache. Returning original url`);
+      logger.info(
+        `Found url key ${urlKey} from cache. Returning original url ${cachedData}`
+      );
       return cachedData;
     }
 
@@ -134,6 +136,6 @@ export class UrlShortenerServiceImpl implements UrlShortenerService {
   }
 
   public constructShortenedUrl(urlKey: string): string {
-    return `${config.baseDomain}/${urlKey}`;
+    return `${config.urlRedirectDomain}/${urlKey}`;
   }
 }
