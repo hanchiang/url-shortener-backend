@@ -35,9 +35,13 @@ const getKnexOptions = () => {
 };
 
 export const runMigrations = async () => {
+  const knexFile =
+    config.nodeEnv === 'production'
+      ? './dist/knexfile.js'
+      : './src/knexfile.ts';
   const commands = [
-    'knex migrate:list --knexfile ./src/knexfile.ts',
-    'knex migrate:latest --knexfile ./src/knexfile.ts',
+    `knex migrate:list --knexfile ${knexFile}`,
+    `knex migrate:latest --knexfile ${knexFile}`,
   ];
 
   for (const command of commands) {
