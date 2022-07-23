@@ -15,7 +15,7 @@ const config = {
   postgresPassword: process.env.POSTGRES_PASSWORD || 'root',
   postgresPort: parseInt(process.env.POSTGRES_PORT) || 5432,
   redisUrl: process.env.REDIS_URL || 'redis://localhost:6379/0',
-  baseDomain: process.env.BASE_DOMAIN || 'http://localhost:3000',
+  urlRedirectDomain: process.env.URL_REDIRECT_DOMAIN || 'http://localhost:3000',
 };
 
 export default config;

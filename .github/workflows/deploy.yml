@@ -85,7 +85,7 @@ jobs:
           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
           REDIS_URL: ${{ secrets.REDIS_URL }}
           ALLOWED_ORIGINS: ${{ secrets.ALLOWED_ORIGINS }}
-          BASE_DOMAIN: ${{ secrets.BASE_DOMAIN }}
+          URL_REDIRECT_DOMAIN: ${{ secrets.URL_REDIRECT_DOMAIN }}
           DOCKER_PULL_PASSWORD: ${{ secrets.DOCKER_PULL_TOKEN }}
         run: |
           ssh production << EOF
@@ -101,7 +101,7 @@ jobs:
           echo "Starting new container"
           docker run --name $APP_NAME -p 3000:3000 --network host -e NODE_ENV=$NODE_ENV -e POSTGRES_HOST=$POSTGRES_HOST \
           -e POSTGRES_USER=$POSTGRES_USER -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -e POSTGRES_DB=$POSTGRES_DB \
-          -e REDIS_URL=$REDIS_URL -e BASE_DOMAIN=$BASE_DOMAIN -e ALLOWED_ORIGINS=$ALLOWED_ORIGINS \
+          -e REDIS_URL=$REDIS_URL -e URL_REDIRECT_DOMAIN=$URL_REDIRECT_DOMAIN -e ALLOWED_ORIGINS=$ALLOWED_ORIGINS \
           -d "$IMAGE_REGISTRY/$APP_NAME:$GITHUB_SHA"
 
           sleep 5
