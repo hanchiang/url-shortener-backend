@@ -6,7 +6,7 @@ import { initDb, closeDb, clearDb } from '../src/db';
 
 before(async function () {
   {
-    this.timeout(10000);
+    this.timeout(30000);
     await initDb();
   }
 });
