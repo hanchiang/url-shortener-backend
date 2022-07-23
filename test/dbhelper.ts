@@ -4,8 +4,11 @@ chai.use(chaiAsPromised);
 
 import { initDb, closeDb, clearDb } from '../src/db';
 
-before(async () => {
-  await initDb();
+before(async function () {
+  {
+    this.timeout(10000);
+    await initDb();
+  }
 });
 
 afterEach(async () => {

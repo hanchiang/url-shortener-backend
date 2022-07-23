@@ -33,7 +33,6 @@ services:
       - "5432:5432"
     volumes:
       - postgres-volume-test:/var/lib/postgresql/data
-      - ./src/db/postgres/schema.sql:/docker-entrypoint-initdb.d/schema.sql
 
   redis_test:
     image: redis:6.0

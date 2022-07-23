@@ -65,7 +65,7 @@ export class UrlShortenerServiceImpl implements UrlShortenerService {
       return undefined;
     }
     if (urls && urls.length) {
-      const urlKey = urls[0].id;
+      const urlKey = urls[0].shortUrl;
       logger.info(
         `Original url ${originalUrl} is found in database, returning url key ${urlKey}`
       );
@@ -116,7 +116,7 @@ export class UrlShortenerServiceImpl implements UrlShortenerService {
       const urlsInDb = await this.urlDao.findByIds(generatedKeys);
       const keysUsed: { [key: string]: boolean } = {};
       for (const urlInDb of urlsInDb) {
-        keysUsed[urlInDb.id] = true;
+        keysUsed[urlInDb.shortUrl] = true;
       }
       for (const generatedKey of generatedKeys) {
         if (!keysUsed[generatedKey]) {
