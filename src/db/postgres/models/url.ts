@@ -2,7 +2,7 @@ import { Model } from 'objection';
 import { MAX_URL_STORAGE_DURATION } from '../../../constants';
 
 export class Url extends Model {
-  shortUrl!: string;
+  hash!: string;
   originalUrl!: string;
 
   createdAt!: Date;
@@ -13,7 +13,7 @@ export class Url extends Model {
   }
 
   static get idColumn() {
-    return 'shortUrl';
+    return 'hash';
   }
 
   $beforeInsert() {
@@ -31,9 +31,9 @@ export class Url extends Model {
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['shortUrl', 'originalUrl'],
+      required: ['hash', 'originalUrl'],
       properties: {
-        shortUrl: { type: 'string' },
+        hash: { type: 'string' },
         originalUrl: { type: 'string' },
         createdAt: { type: 'date' },
         expireAt: { type: 'date' },
