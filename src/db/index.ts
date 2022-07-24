@@ -48,8 +48,8 @@ export const runMigrations = async () => {
     logger.info(`Migration command: ${command}`);
     try {
       const { stdout, stderr } = await exec(command);
-      logger.info(`stdout: ${stdout}`);
-      logger.info(`stderr:${stderr}`);
+      logger.info(`Migration stdout: ${stdout}`);
+      logger.info(`Migration stderr: ${stderr}`);
     } catch (e) {
       logger.error('Encountered error when running migrations: ', { error: e });
     }

@@ -8,7 +8,7 @@ Some examples are [bit.ly](https://bitly.com/) and [tinyurl.com](https://tinyurl
 * Environment: Node
 * Server framework: Express
 * Database: PostgreSQL, Redis
-* Query builder: Knex
+* Query builder, migrations: Knex
 * ORM: Objection
 * Test: Mocha
 * Lint: Eslint
@@ -34,9 +34,10 @@ Some examples are [bit.ly](https://bitly.com/) and [tinyurl.com](https://tinyurl
 * `loadtest/`: Test the performance of the APIs
 
 # Run with docker compose
-* Usage: `./docker-compose.sh <command> <environment> [<args>]`
-* Create and run containers: `./docker-compose.sh <command> <environment> [<args>]`, e.g. `./docker-compose.sh up dev -d`
-* Stop and remove containers: `./docker-compose.sh down dev -d`
+* Usage: `./docker-compose.sh <environment> <command> [<args>]`
+* Create and run containers: `./docker-compose.sh <environment> <command> [<args>]`, e.g. `./docker-compose.sh dev up -d`
+* Stop and remove containers: `./docker-compose.sh dev down -d`
+* Run tests: `./docker-compose test up`
 
 # Run without docker compose
 * Create `.env` file from `.env.sample`, filling in the missing details
@@ -155,7 +156,7 @@ Each key contains 6 characters.
 
 # TODO
 * App should still work if redis is down
-* Use a separate domain for URL redirection: Split this backend into URL shortening and URL redirection
 * Key generation: do not check against the database for existing short urls because there can still be a conflict due to concurrency. Let the database handle the conflict
 * Handle expired keys
 * Use replace mocha and sinon with jest
+* use nginx docker for development
