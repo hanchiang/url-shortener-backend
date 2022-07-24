@@ -3,6 +3,10 @@
 This project is a URL shortener service that allows users to create a short version of a URL.  
 Some examples are [bit.ly](https://bitly.com/) and [tinyurl.com](https://tinyurl.com/)
 
+# Demo
+Sample of a shortened URL to Google: https://go.yaphc.com/google
+Visit https://urlshortener.yaphc.com/ to try it out
+
 # Libraries
 * Programming language: Typescript
 * Environment: Node
