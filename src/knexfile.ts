@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import { knexSnakeCaseMappers } from 'objection';
 import config from './config';
 // Update with your config settings.
@@ -11,6 +12,7 @@ export default {
       user: config.postgresUser,
       password: config.postgresPassword,
       database: config.postgresDb,
+      application_name: config.applicationName,
     },
     pool: {
       min: 2,
@@ -28,6 +30,7 @@ export default {
       user: config.postgresUser,
       password: config.postgresPassword,
       database: config.postgresDb,
+      application_name: config.applicationName,
     },
     pool: {
       min: 1,
@@ -45,6 +48,7 @@ export default {
       user: config.postgresUser,
       password: config.postgresPassword,
       database: config.postgresDb,
+      application_name: config.applicationName,
     },
     pool: {
       min: 1,

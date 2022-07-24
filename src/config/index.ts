@@ -16,6 +16,7 @@ const config = {
   postgresPort: parseInt(process.env.POSTGRES_PORT) || 5432,
   redisUrl: process.env.REDIS_URL || 'redis://localhost:6379/0',
   urlRedirectDomain: process.env.URL_REDIRECT_DOMAIN || 'http://localhost:3000',
+  applicationName: process.env.APPLICATION_NAME || 'URL shortener',
 };
 
 export default config;
