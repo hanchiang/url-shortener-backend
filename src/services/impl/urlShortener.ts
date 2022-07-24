@@ -1,6 +1,8 @@
 import { UrlShortenerService } from './../urlShortener';
 import { KeyGenerationServiceImpl } from './keyGeneration';
 import { KeyGeneration } from '../keyGeneration';
+import { EventEmitterServiceImpl } from './eventEmitter';
+import { EventEmitterService } from '../eventEmitter';
 import config from '../../config';
 import { throwError, ErrorCode } from '../../utils/error';
 import { urlSafe } from '../../utils/urlSafe';
@@ -12,22 +14,26 @@ export class UrlShortenerServiceImpl implements UrlShortenerService {
   private keyGenerationService: KeyGeneration;
   private urlDao: UrlDao;
   private redis: MemoryStore;
+  private eventEmitterService: EventEmitterService;
 
   constructor(
     urlDao: UrlDao,
     keyGenerationService: KeyGeneration,
-    redis: MemoryStore
+    redis: MemoryStore,
+    eventEmitterService: EventEmitterService
   ) {
     this.redis = redis;
     this.keyGenerationService = keyGenerationService;
     this.urlDao = urlDao;
+    this.eventEmitterService = eventEmitterService;
   }
 
   public static defaultImpl(): UrlShortenerService {
     return new UrlShortenerServiceImpl(
       new UrlDaoImpl(),
       new KeyGenerationServiceImpl(),
-      Redis.getInstance()
+      Redis.getInstance(),
+      EventEmitterServiceImpl.getInstance()
     );
   }
 
@@ -35,7 +41,15 @@ export class UrlShortenerServiceImpl implements UrlShortenerService {
     originalUrl: string,
     alias?: string
   ): Promise<string> {
+    this.eventEmitterService.emit('shortenUrl', {
+      payload: {
+        originalUrl,
+        alias,
+      },
+    });
+
     let key;
+
     if (alias) {
       await this.ensureAliasDoesNotExist(alias);
       key = urlSafe(alias);
@@ -74,8 +88,14 @@ export class UrlShortenerServiceImpl implements UrlShortenerService {
   }
 
   public async getOriginalUrl(urlKey: string): Promise<string> {
+    this.eventEmitterService.emit('redirectUrl', {
+      payload: {
+        hash: urlKey,
+      },
+    });
+
     const cachedData = await this.redis.getString(urlKey);
-    // TODO: Test. Log cache hit or miss
+    // TODO: Test
     if (cachedData) {
       logger.info(
         `Found url key ${urlKey} from cache. Returning original url ${cachedData}`

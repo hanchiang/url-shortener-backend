@@ -35,8 +35,8 @@ export class Url extends Model {
       properties: {
         hash: { type: 'string' },
         originalUrl: { type: 'string' },
-        createdAt: { type: 'date' },
-        expireAt: { type: 'date' },
+        createdAt: { type: 'date-time' },
+        expireAt: { type: 'date-time' },
       },
     };
   }
