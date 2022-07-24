@@ -84,9 +84,10 @@ e.g. https://www.fodors.com/community/travel-tips-and-trip-ideas/should-i-go-for
 * Frequently accessed URLs should be cached
 * Set a character limit on custom alias(e.g. 16)
 * Links should expire after some time(e.g. 2 years)
+* Stores event for every request to shorten or redirect URL
 
 
-**Generate short URL**
+## Generate short URL
 We will generate the short url using base62 conversion instead of passing the URL through a hash function.
 
 This solves the issue of hash collision due to truncation of the hash value because it is too long.
@@ -116,16 +117,27 @@ URL table
 * createdAt: datetime
 * expireAt: datetime
 
+URL shorten stats table
+* id(uuid): varchar(32)
+* originalUrl: varchar(1024)
+* alias: varchar(16)
+* createdAt: datetime
+
+URL redirect stats table
+* id(uuid): varchar(32)
+* hash: varchar(16)
+* createdAt: datetime
+
 URLs for 2 years: 10M * 30 days * 12 months * 2 years = 7.2B
 Max size of an URL entry in DB: 16 + 1024 + 8 + 8 = 1048 bytes
 Storage: 7.2B * 1048 bytes per URL = 7.545TB
 
-**Encoding of URL**
+**Encoding of URL**  
 Generate a cryptographically strong pseudo random data, encode it with base62.
 A 6 character key will result in 62^6 = 56.8 billion possible strings
 A 7 character key will result in 62^7 = 3.52 trillion possible strings
 
-**Memory**
+## Memory
 Let's assume 10% of the URLs are accessed frequently and will be cached.  
 Max usage: 10% * 2.4B URLs * (16 bytes hash + 1024 bytes original url) = 249.6GB
 
@@ -136,10 +148,6 @@ Max usage: 10% * 2.4B URLs * (16 bytes hash + 1024 bytes original url) = 249.6GB
 
 ## Read request
 <img src="images/url-shortener-read.png" width="700" />
-
-## Key generation
-Generates a certain number of random keys.  
-Each key contains 6 characters.  
 
 # Load test
 * Install locust: `pip3 install locust`
@@ -160,3 +168,4 @@ Each key contains 6 characters.
 * Handle expired keys
 * Use replace mocha and sinon with jest
 * use nginx docker for development
+* Upgrade redis, knex, objection
