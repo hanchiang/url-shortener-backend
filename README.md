@@ -160,3 +160,4 @@ Each key contains 6 characters.
 * Handle expired keys
 * Use replace mocha and sinon with jest
 * use nginx docker for development
+* Upgrade redis, knex, objection

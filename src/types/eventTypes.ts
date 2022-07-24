@@ -1,6 +1,6 @@
 interface EventEmitterBase<T> {
   payload: T;
-  meta?: Record<string, unknown>
+  meta?: Record<string, unknown>;
 }
 
 export interface RedirectUrl {
@@ -8,8 +8,8 @@ export interface RedirectUrl {
 }
 
 export interface ShortenUrl {
-  originalUrl: string
-  alias?: string
+  originalUrl: string;
+  alias?: string;
 }
 
 export type RedirectUrlPayload = EventEmitterBase<RedirectUrl>;
