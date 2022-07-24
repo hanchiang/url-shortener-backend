@@ -1,5 +1,5 @@
 import { raw } from 'objection';
-import { UrlShortenStats } from '../models/UrlShortenStats';
+import { UrlShortenStats } from '../models/urlShortenStats';
 
 export interface UrlShortenStatsDao {
   healthCheck(): Promise<any>;
