@@ -1,5 +1,8 @@
 # Introduction
 
+![example workflow](https://github.com/hanchiang/url-shortener-backend/actions/workflows/test.yml/badge.svg)
+![example workflow](https://github.com/hanchiang/url-shortener-backend/actions/workflows/deploy.yml/badge.svg)
+
 This project is a URL shortener service that allows users to create a short version of a URL.  
 Some examples are [bit.ly](https://bitly.com/) and [tinyurl.com](https://tinyurl.com/)
 
