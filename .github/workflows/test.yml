@@ -4,6 +4,17 @@ on:
     branches:
       - feature/*
       - master
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'     
+        required: false
+        default: 'info' 
+        type: choice
+        options:
+        - info
+        - warning
+        - debug
 env:
   APP_NAME: url_shortener
   IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
