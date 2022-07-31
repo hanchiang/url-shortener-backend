@@ -35,16 +35,8 @@ export class Redis implements MemoryStore {
     return this.conn.ping();
   }
 
-  public async setString(
-    key: string,
-    value: string,
-    ttl: number = 60 * 60
-  ): Promise<void> {
-    if (ttl) {
-      await this.conn.set(key, value, 'EX', ttl);
-    } else {
-      await this.conn.set(key, value);
-    }
+  public async setString(key: string, value: string): Promise<void> {
+    await this.conn.set(key, value);
   }
 
   public async getString(key: string): Promise<string | null> {
