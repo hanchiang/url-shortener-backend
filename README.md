@@ -83,6 +83,18 @@ e.g. https://www.fodors.com/community/travel-tips-and-trip-ideas/should-i-go-for
 * Can shorten a URL with custom alias  
 e.g. https://www.fodors.com/community/travel-tips-and-trip-ideas/should-i-go-for-a-gopro-dslr-or-drone-1140434/ -> https://preview.tinyurl.com/goprodslrdrone
 
+## Generate short URL
+We will generate the short url using base62 conversion instead of passing the URL through a hash function.
+
+This solves the issue of hash collision due to truncation of the hash value.
+
+However, this means that the same URL will not produce the same hash.
+
+**Encoding of URL**  
+Generate a cryptographically strong pseudo random data, encode it with base62.
+A 6 character key will produce 62^6 = 56.8 billion possible strings
+A 7 character key will produce 62^7 = 3.52 trillion possible strings
+
 ## 2. Visit a shortened url
 * Visiting a shortened URL with or without custom alias should redirect to the original URL.
 
@@ -92,61 +104,30 @@ e.g. https://www.fodors.com/community/travel-tips-and-trip-ideas/should-i-go-for
 * Set a character limit on custom alias(e.g. 16)
 * Links should expire after some time(e.g. 2 years)
 * Stores event for every request to shorten or redirect URL
+* Track URL shorten and redirect events
 
 
-## Generate short URL
-We will generate the short url using base62 conversion instead of passing the URL through a hash function.
-
-This solves the issue of hash collision due to truncation of the hash value because it is too long.
-
-However, this means that the same URL will not produce the same hash.
-
-## Capacity estimation
-* Read to write volume ratio: 50:1
-
-### Traffic
-
-**URL shortening requests**
-* Requests per day: 10M
-  * Queries per sec: 10M / (24 hours * 60 * mins * 60 secs) = 115
-
-**URL redirection requests**
-* Requests per day: 10M * 50 ratio = 500M
-  * Queries per sec: 500M / (24 hours * 60 * mins * 60 secs) = 5787
-
-### Storage
+## Storage
 PostgreSQL: Shortened URLs and original URLs  
 Redis: Cache shortened URLs and original URLs
 
 URL table
 * hash: varchar(16)
 * originalUrl: varchar(1024)
-* createdAt: datetime
-* expireAt: datetime
+* createdAt: datetime(8)
+* expireAt: datetime(8)
 
 URL shorten stats table
 * id(uuid): varchar(32)
 * originalUrl: varchar(1024)
 * alias: varchar(16)
-* createdAt: datetime
+* createdAt: datetime(8)
 
 URL redirect stats table
 * id(uuid): varchar(32)
 * hash: varchar(16)
-* createdAt: datetime
+* createdAt: datetime(8)
 
-URLs for 2 years: 10M * 30 days * 12 months * 2 years = 7.2B
-Max size of an URL entry in DB: 16 + 1024 + 8 + 8 = 1048 bytes
-Storage: 7.2B * 1048 bytes per URL = 7.545TB
-
-**Encoding of URL**  
-Generate a cryptographically strong pseudo random data, encode it with base62.
-A 6 character key will result in 62^6 = 56.8 billion possible strings
-A 7 character key will result in 62^7 = 3.52 trillion possible strings
-
-## Memory
-Let's assume 10% of the URLs are accessed frequently and will be cached.  
-Max usage: 10% * 2.4B URLs * (16 bytes hash + 1024 bytes original url) = 249.6GB
 
 # Architecture
 
