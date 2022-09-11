@@ -26,7 +26,6 @@ env:
 jobs:
   build_and_upload:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     env:
       DOCKER_BUILD_PUSH_PASSWORD: ${{ secrets.DOCKER_BUILD_DEPLOY_TOKEN }}
     steps:
