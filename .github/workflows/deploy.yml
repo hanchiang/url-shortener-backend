@@ -39,8 +39,9 @@ jobs:
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
-          username: $REGISTRY_USER
-          password: $DOCKER_BUILD_PUSH_PASSWORD
+          # Can't use self-defined environment variables for some reason
+          username: ${{ github.actor }}
+          password: ${{ secrets.DOCKER_BUILD_DEPLOY_TOKEN }}
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
