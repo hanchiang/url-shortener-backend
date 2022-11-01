@@ -17,9 +17,6 @@ on:
         - info
         - warning
         - debug
-  push:
-    branches:
-      - feature/*
 env:
   SSH_USER: ${{ secrets.SSH_USER }}
   SSH_HOST: ${{ secrets.SSH_HOST }}
@@ -41,7 +38,7 @@ jobs:
           # Can't use self-defined environment variables for some reason
           username: ${{ github.actor }}
           password: ${{ secrets.DOCKER_BUILD_DEPLOY_TOKEN }}
-      - name: Build and push
+      - name: Build and push image
         uses: docker/build-push-action@v3
         with:
           push: true
