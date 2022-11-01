@@ -6,10 +6,6 @@ on:
       - completed
     branches:
       - master
-  push:
-    branches:
-      - feature/*
-      - master
   workflow_dispatch:
     inputs:
       logLevel:
@@ -21,6 +17,9 @@ on:
         - info
         - warning
         - debug
+  push:
+    branches:
+      - feature/*
 env:
   SSH_USER: ${{ secrets.SSH_USER }}
   SSH_HOST: ${{ secrets.SSH_HOST }}
@@ -47,9 +46,9 @@ jobs:
         with:
           push: true
           target: release
-          tags: $IMAGE_REGISTRY/$APP_NAME:$GITHUB_SHA
-          cache-from: type=registry,ref=$IMAGE_REGISTRY/$APP_NAME:buildcache
-          cache-to: type=registry,ref=$IMAGE_REGISTRY/$APP_NAME:buildcache,mode=max
+          tags: ghcr.io/${{ github.repository_owner }}/url_shortener:${{ github.sha }}
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/url_shortener:buildcache
+          cache-to: type=registry,ref=ghcr.io/${{ github.repository_owner }}/url_shortener:buildcache,mode=max
   health_check:
     runs-on: ubuntu-latest
     needs: [build_and_upload]
