@@ -1,15 +1,26 @@
 name: Build and deploy
 on:
-  # workflow_run:
-  #   workflows: [Test and build]
-  #   types:
-  #     - completed
-  #   branches:
-  #     - master
+  workflow_run:
+    workflows: [Test and build]
+    types:
+      - completed
+    branches:
+      - master
   push:
     branches:
       - feature/*
       - master
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'     
+        required: false
+        default: 'info' 
+        type: choice
+        options:
+        - info
+        - warning
+        - debug
 env:
   SSH_USER: ${{ secrets.SSH_USER }}
   SSH_HOST: ${{ secrets.SSH_HOST }}
@@ -19,7 +30,6 @@ env:
 jobs:
   build_and_upload:
     runs-on: ubuntu-latest
-    # if: ${{ github.event.workflow_run.conclusion == 'success' }}
     env:
       DOCKER_BUILD_PUSH_PASSWORD: ${{ secrets.DOCKER_BUILD_DEPLOY_TOKEN }}
     steps:

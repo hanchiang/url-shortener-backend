@@ -1,39 +1,50 @@
-# name: Test and build
-# on:
-#   push:
-#     branches:
-#       - feature/*
-#       - master
-# env:
-#   APP_NAME: url_shortener
-#   IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
-# jobs:
-#   test:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v3
-#       - name: Run tests with docker compose
-#         run: |
-#           ./docker-compose.sh test build 
-#           ./docker-compose.sh test up --exit-code-from backend
-#           ./docker-compose.sh test down
-#   build:
-#     runs-on: ubuntu-latest
-#     needs: [test]
-#     steps:
-#       - uses: actions/checkout@v3
-#       - name: Build docker image
-#         id: build_image
-#         run: docker build -t "$IMAGE_REGISTRY/$APP_NAME:$GITHUB_SHA" --target release .
-#   notify_unsuccessful:
-#     runs-on: ubuntu-latest
-#     needs: [test, build]
-#     if: ${{ failure() }}
-#     env:
-#       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-#     steps:
-#       - name: Send slack notification
-#         run: |
-#           now=$(date +%Y-%m-%dT%H:%M:%S)
-#           payload=$(echo "{\"text\":\"URL shortener backend: Test and build failed at <DATE>. Workflow: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\"}" | sed "s~<DATE>~$now~")
-#           curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK
+name: Test and build
+on:
+  push:
+    branches:
+      - feature/*
+      - master
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'     
+        required: false
+        default: 'info' 
+        type: choice
+        options:
+        - info
+        - warning
+        - debug
+env:
+  APP_NAME: url_shortener
+  IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run tests with docker compose
+        run: |
+          ./docker-compose.sh test build 
+          ./docker-compose.sh test up --exit-code-from backend
+          ./docker-compose.sh test down
+  build:
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build docker image
+        id: build_image
+        run: docker build -t "$IMAGE_REGISTRY/$APP_NAME:$GITHUB_SHA" --target release .
+  notify_unsuccessful:
+    runs-on: ubuntu-latest
+    needs: [test, build]
+    if: ${{ failure() }}
+    env:
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+    steps:
+      - name: Send slack notification
+        run: |
+          now=$(date +%Y-%m-%dT%H:%M:%S)
+          payload=$(echo "{\"text\":\"URL shortener backend: Test and build failed at <DATE>. Workflow: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\"}" | sed "s~<DATE>~$now~")
+          curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK
