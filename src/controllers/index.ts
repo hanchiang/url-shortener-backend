@@ -62,6 +62,7 @@ export const redirectUrl = async (
   const shortenUrlService = UrlShortenerServiceImpl.defaultImpl();
   const originalUrl = await shortenUrlService.getOriginalUrl(urlKey);
 
+  // TODO: Should render an error page
   if (!originalUrl) {
     throwError({
       status: ErrorCode.NOT_FOUND,

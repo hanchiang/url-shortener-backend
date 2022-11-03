@@ -26,8 +26,6 @@ env:
 jobs:
   build_and_upload:
     runs-on: ubuntu-latest
-    env:
-      DOCKER_BUILD_PUSH_PASSWORD: ${{ secrets.DOCKER_BUILD_DEPLOY_TOKEN }}
     steps:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -113,13 +111,15 @@ jobs:
           docker stop $APP_NAME && docker rm $APP_NAME
 
           echo "Starting new container"
-          docker run --name $APP_NAME -p 3000:3000 --network host -e NODE_ENV=$NODE_ENV -e POSTGRES_HOST=$POSTGRES_HOST \
+          docker run --name $APP_NAME -p 3000:3000 --network host -m 200m --cpus="0.5" -e NODE_ENV=$NODE_ENV -e POSTGRES_HOST=$POSTGRES_HOST \
           -e POSTGRES_USER=$POSTGRES_USER -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -e POSTGRES_DB=$POSTGRES_DB \
           -e REDIS_URL=$REDIS_URL -e URL_REDIRECT_DOMAIN=$URL_REDIRECT_DOMAIN -e ALLOWED_ORIGINS=$ALLOWED_ORIGINS \
           -d "$IMAGE_REGISTRY/$APP_NAME:$GITHUB_SHA"
 
-          sleep 5
+          sleep 3
           docker ps
+
+          docker image prune -fa
           EOF
   notify_unsuccessful:
     runs-on: ubuntu-latest
