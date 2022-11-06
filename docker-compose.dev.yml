@@ -41,16 +41,6 @@ services:
     volumes:
       - redis-volume-dev:/data
 
-  nginx:
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile.nginx
-    image: url-shortener-nginx:dev
-    ports:
-      - "80:80"
-    depends_on:
-      - backend
-
 volumes:
   postgres-volume-dev:
   redis-volume-dev:

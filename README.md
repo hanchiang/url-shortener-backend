@@ -157,3 +157,4 @@ URL redirect stats table
 * Use replace mocha and sinon with jest
 * use nginx docker for development
 * Upgrade redis, knex, objection
+* Create a user-defined network in docker in order to use container name to communicate with other containers
