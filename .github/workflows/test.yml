@@ -40,7 +40,7 @@ jobs:
           registry: ghcr.io
           # Can't use self-defined environment variables for some reason
           username: ${{ github.actor }}
-          password: ${{ secrets.DOCKER_BUILD_DEPLOY_TOKEN }}
+          password: ${{ secrets.DOCKER_BUILD_PUSH_TOKEN }}
       - name: Build image
         id: build_image
         uses: docker/build-push-action@v3
