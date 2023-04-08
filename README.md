@@ -132,10 +132,10 @@ URL redirect stats table
 # Architecture
 
 ## Write request
-<img src="images/url-shortener-write.png" width="700" />
+<img src="images/url-shortener-write.jpg" width="700" />
 
 ## Read request
-<img src="images/url-shortener-read.png" width="700" />
+<img src="images/url-shortener-read.jpg" width="700" />
 
 # Load test
 * Install locust: `pip3 install locust`
