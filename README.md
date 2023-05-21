@@ -7,8 +7,9 @@ This project is a URL shortener service that allows users to create a short vers
 Some examples are [bit.ly](https://bitly.com/) and [tinyurl.com](https://tinyurl.com/)
 
 # Demo
-Sample of a shortened URL to Google: https://go.yaphc.com/google
-Visit https://urlshortener.yaphc.com/ to try it out
+Sample of a shortened URL to Google: https://go.yaphc.com/google  
+Visit https://urlshortener.yaphc.com/ to try it out  
+Portfolio: https://drive.google.com/drive/folders/1q8AFX6WHSUqmaaIGf4A9XvpsRj5h5kHx?usp=share_link
 
 # Libraries
 * Programming language: Typescript
