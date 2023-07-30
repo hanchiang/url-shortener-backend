@@ -121,6 +121,13 @@ jobs:
 
           docker image prune -fa
           EOF
+      - name: Delete old github package versions
+        uses: actions/delete-package-versions@v4
+        with:
+          package-name: 'url_shortener'
+          package-type: 'container'
+          min-versions-to-keep: 50
+          token: ${{ secrets.DELETE_OLD_PACKAGE_TOKEN }}
   notify_unsuccessful:
     runs-on: ubuntu-latest
     needs: [deploy]
