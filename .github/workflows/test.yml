@@ -28,7 +28,7 @@ jobs:
           ./docker-compose.sh test build 
           ./docker-compose.sh test up --exit-code-from backend
           ./docker-compose.sh test down
-  build:
+  build-amd64:
     runs-on: ubuntu-latest
     needs: [test]
     steps:
@@ -43,16 +43,47 @@ jobs:
           password: ${{ secrets.DOCKER_BUILD_PUSH_TOKEN }}
       - name: Build image
         id: build_image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           push: false
           target: release
           tags: ghcr.io/${{ github.repository_owner }}/url_shortener:${{ github.sha }}
           cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/url_shortener:buildcache
           cache-to: type=registry,ref=ghcr.io/${{ github.repository_owner }}/url_shortener:buildcache,mode=max
+          platforms: linux/amd64
+  build-arm64:
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - name: Set up QEMU
+        # npm install takes a very long time for arm64
+        # https://github.com/docker/setup-qemu-action/issues/22
+        # https://github.com/nodejs/docker-node/issues/1335
+        uses: docker/setup-qemu-action@v2
+        with:
+          platforms: arm64
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          # Can't use self-defined environment variables for some reason
+          username: ${{ github.actor }}
+          password: ${{ secrets.DOCKER_BUILD_PUSH_TOKEN }}
+      - name: Build image
+        id: build_image
+        uses: docker/build-push-action@v4
+        with:
+          push: false
+          target: release
+          tags: ghcr.io/${{ github.repository_owner }}/url_shortener:${{ github.sha }}
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/url_shortener:buildcache
+          cache-to: type=registry,ref=ghcr.io/${{ github.repository_owner }}/url_shortener:buildcache,mode=max
+          platforms: linux/arm64
   notify_unsuccessful:
     runs-on: ubuntu-latest
-    needs: [test, build]
+    needs: [test, build-amd64, build-arm64]
     if: ${{ failure() }}
     env:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
