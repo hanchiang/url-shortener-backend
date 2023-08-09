@@ -2,6 +2,7 @@ version: '3.4'
 
 services:
   backend:
+    platform: linux/arm64
     build:
       context: .
       target: dev

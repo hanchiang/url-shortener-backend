@@ -1,6 +1,16 @@
 # --- Base ---
 FROM node:16-bullseye-slim AS base
 
+ARG TARGETPLATFORM
+ARG TARGETARCH
+ARG TARGETVARIANT
+RUN printf "I'm building for TARGETPLATFORM=${TARGETPLATFORM}" \
+    && printf ", TARGETARCH=${TARGETARCH}" \
+    && printf ", TARGETVARIANT=${TARGETVARIANT} \n" \
+    && printf "With uname -s : " && uname -s \
+    && printf "and  uname -m : " && uname -m
+
+
 RUN mkdir -p /opt/node_app && chown -R node:node /opt/node_app
 RUN apt-get update && apt-get -y install curl
 
