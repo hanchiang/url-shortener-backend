@@ -33,6 +33,9 @@ jobs:
     needs: [test]
     steps:
       - name: Set up QEMU
+        # npm install takes a very long time for arm64
+        # https://github.com/docker/setup-qemu-action/issues/22
+        # https://github.com/nodejs/docker-node/issues/1335
         uses: docker/setup-qemu-action@v2
         with:
           platforms: arm64
