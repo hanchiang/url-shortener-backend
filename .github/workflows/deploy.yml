@@ -24,7 +24,7 @@ env:
   IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
   REGISTRY_USER: ${{ github.actor }}
 jobs:
-  build-am64-and-upload:
+  build-amd64-and-upload:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Docker Buildx
