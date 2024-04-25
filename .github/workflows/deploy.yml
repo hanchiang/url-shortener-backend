@@ -123,6 +123,7 @@ jobs:
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
           REDIS_URL: ${{ secrets.REDIS_URL }}
+          DISALLOWED_URLS: ${{ secrets.DISALLOWED_URLS }}
           ALLOWED_ORIGINS: ${{ secrets.ALLOWED_ORIGINS }}
           URL_REDIRECT_DOMAIN: ${{ secrets.URL_REDIRECT_DOMAIN }}
           DOCKER_PULL_PASSWORD: ${{ secrets.DOCKER_PULL_TOKEN }}
@@ -141,6 +142,7 @@ jobs:
           docker run --name $APP_NAME -p 3000:3000 --network host -m 200m --cpus="0.5" -e NODE_ENV=$NODE_ENV -e POSTGRES_HOST=$POSTGRES_HOST \
           -e POSTGRES_USER=$POSTGRES_USER -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -e POSTGRES_DB=$POSTGRES_DB \
           -e REDIS_URL=$REDIS_URL -e URL_REDIRECT_DOMAIN=$URL_REDIRECT_DOMAIN -e ALLOWED_ORIGINS=$ALLOWED_ORIGINS \
+          -e DISALLOWED_URLS=$DISALLOWED_URLS
           -d "$IMAGE_REGISTRY/$APP_NAME:$GITHUB_SHA"
 
           sleep 3

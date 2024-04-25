@@ -17,6 +17,7 @@ const config = {
   redisUrl: process.env.REDIS_URL || 'redis://localhost:6379/0',
   urlRedirectDomain: process.env.URL_REDIRECT_DOMAIN || 'http://localhost:3000',
   applicationName: process.env.APPLICATION_NAME || 'URL shortener',
+  disallowedUrls: (process.env.DISALLOWED_URLS || '').split(','),
 };
 
 export default config;

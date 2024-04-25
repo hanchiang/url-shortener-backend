@@ -15,6 +15,7 @@ import { UrlDaoImpl } from '../db/postgres/dao/urlDao';
 import { Redis } from '../db/redis';
 import { throwError, ErrorCode } from '../utils/error';
 import logger from '../utils/logger';
+import config from '../config';
 
 export const healthCheck = async (
   req: ValidatedRequest<HealthCheckSchema>,
@@ -61,6 +62,17 @@ export const redirectUrl = async (
   const { urlKey } = req.params;
   const shortenUrlService = UrlShortenerServiceImpl.defaultImpl();
   const originalUrl = await shortenUrlService.getOriginalUrl(urlKey);
+
+  const isDisallow = !!config.disallowedUrls.find(disAllowedUrl => {
+    originalUrl.indexOf(disAllowedUrl) !== -1
+  })
+
+  if (isDisallow) {
+    throwError({
+      status: ErrorCode.NOT_FOUND,
+      message: `Short URL ${urlKey} original URL ${originalUrl} not allowed`,
+    });
+  }
 
   // TODO: Should render an error page
   if (!originalUrl) {

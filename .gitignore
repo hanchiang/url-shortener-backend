@@ -42,3 +42,6 @@ yarn.lock
 
 # nyc
 .nyc_output
+local-build-push-dockerfile.sh
+
+myreadme.txt
