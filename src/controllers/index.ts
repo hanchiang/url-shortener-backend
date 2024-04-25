@@ -64,7 +64,7 @@ export const redirectUrl = async (
   const originalUrl = await shortenUrlService.getOriginalUrl(urlKey);
 
   const isDisallow = !!config.disallowedUrls.find((disAllowedUrl) => {
-    originalUrl.indexOf(disAllowedUrl) !== -1;
+    return originalUrl.indexOf(disAllowedUrl) !== -1;
   });
 
   if (isDisallow) {
